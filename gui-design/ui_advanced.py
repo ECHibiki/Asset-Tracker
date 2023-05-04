@@ -23,7 +23,7 @@ class Ui_Advanced(object):
     def setupUi(self, Advanced):
         if not Advanced.objectName():
             Advanced.setObjectName(u"Advanced")
-        Advanced.resize(466, 377)
+        Advanced.resize(460, 374)
         self.graphicsView = GLViewWidget(Advanced)
         self.graphicsView.setObjectName(u"graphicsView")
         self.graphicsView.setGeometry(QRect(0, 0, 461, 371))

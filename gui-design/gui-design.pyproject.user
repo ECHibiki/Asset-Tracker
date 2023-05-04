@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 10.0.0, 2023-05-02T01:52:29. -->
+<!-- Written by QtCreator 10.0.0, 2023-05-03T21:10:26. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -149,6 +149,7 @@
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="bool" key="RunConfiguration.UseTerminal">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/verniy/Projects/Pegasus/DataGUI-Prototype/gui-design</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>

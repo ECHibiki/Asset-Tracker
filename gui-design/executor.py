@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import sys
-import pyqtgraph
+import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 
 from PySide6.QtWidgets import QApplication, QWidget, QDialog, QMainWindow
@@ -22,11 +22,30 @@ class MainWidget(QWidget):
         self.ui = ui_main.Ui_Widget()
         self.ui.setupUi(self)
 
+        self.ui.PercentPerformancePlot.setLimits(xMin=-0.1, xMax=8, minXRange=1, yMin=0, yMax=100)
+        self.ui.PercentPerformancePlot.setRange(xRange=(0,5,) , yRange=(0,5,))
+        self.ui.PercentPerformancePlot.showGrid(x = True, y = True, alpha = 0.2)
+
+        ticks = [list(zip(range(8), ( 'a', 'b', 'c', 'd', 'e','f','g', 'h' )))]
+#        You can get an existing AxisItem of a PlotWidget like so:
+        xax = self.ui.PercentPerformancePlot.getAxis('bottom')
+#        And finally set the ticks of the axis like so:
+        xax.setTicks(ticks)
+
+
+
+    def openSettingsItem(self):
+        print(self.sender().objectName())
+
+
 class SymbolWidget(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = ui_symbols.Ui_NewSymbols()
         self.ui.setupUi(self)
+
+    def addSymbols(self):
+        print(self.ui.SymbolList.toPlainText())
 
 class DatesWidget(QMainWindow):
     def __init__(self, parent=None):
@@ -34,11 +53,25 @@ class DatesWidget(QMainWindow):
         self.ui = ui_dates.Ui_Dates()
         self.ui.setupUi(self)
 
+        self.is_start = True;
+
+    def dateEffector(self, date):
+        # Set in the perscribed position
+        # If selected dates before other then swap, next action will be an end setters
+        # Else set in true location
+        print(date)
+
+    def submitDate(self):
+        print(self.ui.StartDate.date(), self.ui.EndDate.date())
+
 class QueryWidget(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = ui_query.Ui_Query()
         self.ui.setupUi(self)
+
+    def sendRequest(self):
+        print(self.sender())
 
 class AdvancedWidget(QMainWindow):
     def __init__(self, parent=None):

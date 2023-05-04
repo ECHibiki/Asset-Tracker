@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QGroupBox, QHBoxLayout,
-    QHeaderView, QLayout, QPushButton, QScrollArea,
-    QSizePolicy, QSpacerItem, QTableView, QWidget)
+from PySide6.QtWidgets import (QApplication, QGroupBox, QHBoxLayout, QHeaderView,
+    QLayout, QPushButton, QSizePolicy, QSpacerItem,
+    QTableWidget, QTableWidgetItem, QWidget)
 
 from pyqtgraph import PlotWidget
 
@@ -145,8 +145,8 @@ class Ui_Widget(object):
 
         self.horizontalLayout.addWidget(self.SymbolButton)
 
-        self.pushButton = QPushButton(self.horizontalLayoutWidget)
-        self.pushButton.setObjectName(u"pushButton")
+        self.RangeButton = QPushButton(self.horizontalLayoutWidget)
+        self.RangeButton.setObjectName(u"RangeButton")
         icon1 = QIcon()
         iconThemeName = u"x-office-calendar"
         if QIcon.hasThemeIcon(iconThemeName):
@@ -154,13 +154,13 @@ class Ui_Widget(object):
         else:
             icon1.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
 
-        self.pushButton.setIcon(icon1)
+        self.RangeButton.setIcon(icon1)
 
-        self.horizontalLayout.addWidget(self.pushButton)
+        self.horizontalLayout.addWidget(self.RangeButton)
 
-        self.pushButton_2 = QPushButton(self.horizontalLayoutWidget)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setEnabled(True)
+        self.RequestsButton = QPushButton(self.horizontalLayoutWidget)
+        self.RequestsButton.setObjectName(u"RequestsButton")
+        self.RequestsButton.setEnabled(True)
         icon2 = QIcon()
         iconThemeName = u"list-add"
         if QIcon.hasThemeIcon(iconThemeName):
@@ -168,12 +168,12 @@ class Ui_Widget(object):
         else:
             icon2.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
 
-        self.pushButton_2.setIcon(icon2)
+        self.RequestsButton.setIcon(icon2)
 
-        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.horizontalLayout.addWidget(self.RequestsButton)
 
-        self.pushButton_3 = QPushButton(self.horizontalLayoutWidget)
-        self.pushButton_3.setObjectName(u"pushButton_3")
+        self.ThreeDButton = QPushButton(self.horizontalLayoutWidget)
+        self.ThreeDButton.setObjectName(u"ThreeDButton")
         icon3 = QIcon()
         iconThemeName = u"image-x-generic"
         if QIcon.hasThemeIcon(iconThemeName):
@@ -181,112 +181,68 @@ class Ui_Widget(object):
         else:
             icon3.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
 
-        self.pushButton_3.setIcon(icon3)
+        self.ThreeDButton.setIcon(icon3)
 
-        self.horizontalLayout.addWidget(self.pushButton_3)
+        self.horizontalLayout.addWidget(self.ThreeDButton)
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.graphicsView = PlotWidget(Widget)
-        self.graphicsView.setObjectName(u"graphicsView")
-        self.graphicsView.setGeometry(QRect(0, 50, 361, 291))
-        self.scrollArea = QScrollArea(Widget)
-        self.scrollArea.setObjectName(u"scrollArea")
-        self.scrollArea.setGeometry(QRect(0, 350, 541, 141))
-        palette1 = QPalette()
-        palette1.setBrush(QPalette.Active, QPalette.WindowText, brush)
-        brush14 = QBrush(QColor(222, 221, 218, 255))
-        brush14.setStyle(Qt.SolidPattern)
-        palette1.setBrush(QPalette.Active, QPalette.Button, brush14)
-        palette1.setBrush(QPalette.Active, QPalette.Light, brush1)
-        brush15 = QBrush(QColor(238, 238, 236, 255))
-        brush15.setStyle(Qt.SolidPattern)
-        palette1.setBrush(QPalette.Active, QPalette.Midlight, brush15)
-        brush16 = QBrush(QColor(111, 110, 109, 255))
-        brush16.setStyle(Qt.SolidPattern)
-        palette1.setBrush(QPalette.Active, QPalette.Dark, brush16)
-        brush17 = QBrush(QColor(148, 147, 145, 255))
-        brush17.setStyle(Qt.SolidPattern)
-        palette1.setBrush(QPalette.Active, QPalette.Mid, brush17)
-        palette1.setBrush(QPalette.Active, QPalette.Text, brush)
-        palette1.setBrush(QPalette.Active, QPalette.BrightText, brush1)
-        palette1.setBrush(QPalette.Active, QPalette.ButtonText, brush)
-        palette1.setBrush(QPalette.Active, QPalette.Base, brush1)
-        palette1.setBrush(QPalette.Active, QPalette.Window, brush14)
-        palette1.setBrush(QPalette.Active, QPalette.Shadow, brush)
-        palette1.setBrush(QPalette.Active, QPalette.AlternateBase, brush15)
-        palette1.setBrush(QPalette.Active, QPalette.ToolTipBase, brush4)
-        palette1.setBrush(QPalette.Active, QPalette.ToolTipText, brush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette1.setBrush(QPalette.Active, QPalette.PlaceholderText, brush5)
-#endif
-        palette1.setBrush(QPalette.Inactive, QPalette.WindowText, brush)
-        palette1.setBrush(QPalette.Inactive, QPalette.Button, brush6)
-        palette1.setBrush(QPalette.Inactive, QPalette.Light, brush1)
-        palette1.setBrush(QPalette.Inactive, QPalette.Midlight, brush7)
-        palette1.setBrush(QPalette.Inactive, QPalette.Dark, brush8)
-        palette1.setBrush(QPalette.Inactive, QPalette.Mid, brush9)
-        palette1.setBrush(QPalette.Inactive, QPalette.Text, brush)
-        palette1.setBrush(QPalette.Inactive, QPalette.BrightText, brush1)
-        palette1.setBrush(QPalette.Inactive, QPalette.ButtonText, brush)
-        palette1.setBrush(QPalette.Inactive, QPalette.Base, brush1)
-        palette1.setBrush(QPalette.Inactive, QPalette.Window, brush6)
-        palette1.setBrush(QPalette.Inactive, QPalette.Shadow, brush10)
-        palette1.setBrush(QPalette.Inactive, QPalette.AlternateBase, brush11)
-        palette1.setBrush(QPalette.Inactive, QPalette.ToolTipBase, brush4)
-        palette1.setBrush(QPalette.Inactive, QPalette.ToolTipText, brush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette1.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush12)
-#endif
-        palette1.setBrush(QPalette.Disabled, QPalette.WindowText, brush16)
-        palette1.setBrush(QPalette.Disabled, QPalette.Button, brush14)
-        palette1.setBrush(QPalette.Disabled, QPalette.Light, brush1)
-        palette1.setBrush(QPalette.Disabled, QPalette.Midlight, brush15)
-        palette1.setBrush(QPalette.Disabled, QPalette.Dark, brush16)
-        palette1.setBrush(QPalette.Disabled, QPalette.Mid, brush17)
-        palette1.setBrush(QPalette.Disabled, QPalette.Text, brush16)
-        palette1.setBrush(QPalette.Disabled, QPalette.BrightText, brush1)
-        palette1.setBrush(QPalette.Disabled, QPalette.ButtonText, brush16)
-        palette1.setBrush(QPalette.Disabled, QPalette.Base, brush14)
-        palette1.setBrush(QPalette.Disabled, QPalette.Window, brush14)
-        palette1.setBrush(QPalette.Disabled, QPalette.Shadow, brush13)
-        palette1.setBrush(QPalette.Disabled, QPalette.AlternateBase, brush11)
-        palette1.setBrush(QPalette.Disabled, QPalette.ToolTipBase, brush4)
-        palette1.setBrush(QPalette.Disabled, QPalette.ToolTipText, brush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette1.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush12)
-#endif
-        self.scrollArea.setPalette(palette1)
-        self.scrollArea.setAutoFillBackground(True)
-        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollAreaWidgetContents = QWidget()
-        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 525, 125))
-        self.tableView = QTableView(self.scrollAreaWidgetContents)
-        self.tableView.setObjectName(u"tableView")
-        self.tableView.setGeometry(QRect(0, 0, 531, 192))
-        self.tableView.setAutoFillBackground(False)
-        self.tableView.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
-        self.tableView.setGridStyle(Qt.SolidLine)
-        self.tableView.setSortingEnabled(False)
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.scrollArea_2 = QScrollArea(Widget)
-        self.scrollArea_2.setObjectName(u"scrollArea_2")
-        self.scrollArea_2.setGeometry(QRect(370, 50, 171, 291))
-        self.scrollArea_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scrollArea_2.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.scrollArea_2.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContentsOnFirstShow)
-        self.scrollArea_2.setWidgetResizable(True)
-        self.scrollAreaWidgetContents_2 = QWidget()
-        self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 155, 289))
-        self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
+        self.groupBox_2 = QGroupBox(Widget)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.groupBox_2.setGeometry(QRect(0, 340, 541, 151))
+        self.AdvancedTable = QTableWidget(self.groupBox_2)
+        if (self.AdvancedTable.columnCount() < 2):
+            self.AdvancedTable.setColumnCount(2)
+        __qtablewidgetitem = QTableWidgetItem()
+        self.AdvancedTable.setHorizontalHeaderItem(0, __qtablewidgetitem)
+        __qtablewidgetitem1 = QTableWidgetItem()
+        self.AdvancedTable.setHorizontalHeaderItem(1, __qtablewidgetitem1)
+        if (self.AdvancedTable.rowCount() < 5):
+            self.AdvancedTable.setRowCount(5)
+        __qtablewidgetitem2 = QTableWidgetItem()
+        self.AdvancedTable.setVerticalHeaderItem(0, __qtablewidgetitem2)
+        __qtablewidgetitem3 = QTableWidgetItem()
+        self.AdvancedTable.setVerticalHeaderItem(1, __qtablewidgetitem3)
+        __qtablewidgetitem4 = QTableWidgetItem()
+        self.AdvancedTable.setVerticalHeaderItem(2, __qtablewidgetitem4)
+        __qtablewidgetitem5 = QTableWidgetItem()
+        self.AdvancedTable.setVerticalHeaderItem(3, __qtablewidgetitem5)
+        __qtablewidgetitem6 = QTableWidgetItem()
+        self.AdvancedTable.setVerticalHeaderItem(4, __qtablewidgetitem6)
+        self.AdvancedTable.setObjectName(u"AdvancedTable")
+        self.AdvancedTable.setGeometry(QRect(0, 20, 541, 131))
+        sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.AdvancedTable.sizePolicy().hasHeightForWidth())
+        self.AdvancedTable.setSizePolicy(sizePolicy2)
+        self.groupBox_3 = QGroupBox(Widget)
+        self.groupBox_3.setObjectName(u"groupBox_3")
+        self.groupBox_3.setGeometry(QRect(380, 50, 161, 291))
+        self.SimpleTable = QTableWidget(self.groupBox_3)
+        if (self.SimpleTable.columnCount() < 2):
+            self.SimpleTable.setColumnCount(2)
+        __qtablewidgetitem7 = QTableWidgetItem()
+        self.SimpleTable.setHorizontalHeaderItem(0, __qtablewidgetitem7)
+        __qtablewidgetitem8 = QTableWidgetItem()
+        self.SimpleTable.setHorizontalHeaderItem(1, __qtablewidgetitem8)
+        self.SimpleTable.setObjectName(u"SimpleTable")
+        self.SimpleTable.setGeometry(QRect(0, 20, 161, 271))
+        self.SimpleTable.horizontalHeader().setDefaultSectionSize(79)
+        self.groupBox_4 = QGroupBox(Widget)
+        self.groupBox_4.setObjectName(u"groupBox_4")
+        self.groupBox_4.setGeometry(QRect(0, 50, 371, 291))
+        self.PercentPerformancePlot = PlotWidget(self.groupBox_4)
+        self.PercentPerformancePlot.setObjectName(u"PercentPerformancePlot")
+        self.PercentPerformancePlot.setGeometry(QRect(0, 20, 371, 271))
 
         self.retranslateUi(Widget)
+        self.SymbolButton.clicked.connect(Widget.openSettingsItem)
+        self.RequestsButton.clicked.connect(Widget.openSettingsItem)
+        self.RangeButton.clicked.connect(Widget.openSettingsItem)
+        self.ThreeDButton.clicked.connect(Widget.openSettingsItem)
 
         QMetaObject.connectSlotsByName(Widget)
     # setupUi
@@ -299,16 +255,37 @@ class Ui_Widget(object):
 #endif // QT_CONFIG(tooltip)
         self.SymbolButton.setText("")
 #if QT_CONFIG(tooltip)
-        self.pushButton.setToolTip(QCoreApplication.translate("Widget", u"Dates", None))
+        self.RangeButton.setToolTip(QCoreApplication.translate("Widget", u"Dates", None))
 #endif // QT_CONFIG(tooltip)
-        self.pushButton.setText("")
+        self.RangeButton.setText("")
 #if QT_CONFIG(tooltip)
-        self.pushButton_2.setToolTip(QCoreApplication.translate("Widget", u"Time Interval", None))
+        self.RequestsButton.setToolTip(QCoreApplication.translate("Widget", u"Time Interval", None))
 #endif // QT_CONFIG(tooltip)
-        self.pushButton_2.setText("")
+        self.RequestsButton.setText("")
 #if QT_CONFIG(tooltip)
-        self.pushButton_3.setToolTip(QCoreApplication.translate("Widget", u"3D Chart", None))
+        self.ThreeDButton.setToolTip(QCoreApplication.translate("Widget", u"3D Chart", None))
 #endif // QT_CONFIG(tooltip)
-        self.pushButton_3.setText("")
+        self.ThreeDButton.setText("")
+        self.groupBox_2.setTitle(QCoreApplication.translate("Widget", u"Daily Complex", None))
+        ___qtablewidgetitem = self.AdvancedTable.horizontalHeaderItem(0)
+        ___qtablewidgetitem.setText(QCoreApplication.translate("Widget", u"1992/02/01", None));
+        ___qtablewidgetitem1 = self.AdvancedTable.horizontalHeaderItem(1)
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("Widget", u"1992/02/02", None));
+        ___qtablewidgetitem2 = self.AdvancedTable.verticalHeaderItem(0)
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("Widget", u"Symbol", None));
+        ___qtablewidgetitem3 = self.AdvancedTable.verticalHeaderItem(1)
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("Widget", u"Market Cap", None));
+        ___qtablewidgetitem4 = self.AdvancedTable.verticalHeaderItem(2)
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("Widget", u"P/E", None));
+        ___qtablewidgetitem5 = self.AdvancedTable.verticalHeaderItem(3)
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("Widget", u"EPS", None));
+        ___qtablewidgetitem6 = self.AdvancedTable.verticalHeaderItem(4)
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("Widget", u"Volume", None));
+        self.groupBox_3.setTitle(QCoreApplication.translate("Widget", u"Daily %", None))
+        ___qtablewidgetitem7 = self.SimpleTable.horizontalHeaderItem(0)
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("Widget", u"Symbol", None));
+        ___qtablewidgetitem8 = self.SimpleTable.horizontalHeaderItem(1)
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("Widget", u"Today(%)", None));
+        self.groupBox_4.setTitle(QCoreApplication.translate("Widget", u"Today % Performance", None))
     # retranslateUi
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>529</width>
-    <height>179</height>
+    <height>176</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,8 +36,13 @@
       <height>21</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
-     <string>Select a date range (for start)</string>
+     <string>Select a date range (Start)</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -53,7 +58,7 @@
      <string>Start</string>
     </property>
    </widget>
-   <widget class="QDateEdit" name="dateEdit">
+   <widget class="QDateEdit" name="StartDate">
     <property name="geometry">
      <rect>
       <x>420</x>
@@ -66,7 +71,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QDateEdit" name="dateEdit_2">
+   <widget class="QDateEdit" name="EndDate">
     <property name="geometry">
      <rect>
       <x>420</x>
@@ -92,8 +97,58 @@
      <string>End</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>140</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Confirm</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>calendarWidget</sender>
+   <signal>clicked(QDate)</signal>
+   <receiver>Dates</receiver>
+   <slot>dateEffector(QDate)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>161</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>415</x>
+     <y>4</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Dates</receiver>
+   <slot>submitDate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>485</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>479</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>dateEffector(QDate)</slot>
+  <slot>submitDate()</slot>
+ </slots>
 </ui>

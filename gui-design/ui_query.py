@@ -23,29 +23,34 @@ class Ui_Query(object):
         if not Query.objectName():
             Query.setObjectName(u"Query")
         Query.resize(221, 138)
-        self.lineEdit = QLineEdit(Query)
-        self.lineEdit.setObjectName(u"lineEdit")
-        self.lineEdit.setGeometry(QRect(30, 40, 181, 21))
+        self.URL = QLineEdit(Query)
+        self.URL.setObjectName(u"URL")
+        self.URL.setGeometry(QRect(30, 40, 181, 21))
         self.label = QLabel(Query)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(40, 10, 181, 16))
-        self.pushButton = QPushButton(Query)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(70, 100, 80, 23))
+        self.SendButton = QPushButton(Query)
+        self.SendButton.setObjectName(u"SendButton")
+        self.SendButton.setGeometry(QRect(70, 110, 80, 23))
         self.label_2 = QLabel(Query)
         self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(60, 70, 101, 16))
+        self.label_2.setGeometry(QRect(80, 70, 61, 16))
+        self.ResponseContainer = QLabel(Query)
+        self.ResponseContainer.setObjectName(u"ResponseContainer")
+        self.ResponseContainer.setGeometry(QRect(80, 90, 61, 16))
 
         self.retranslateUi(Query)
+        self.SendButton.clicked.connect(Query.sendRequest)
 
         QMetaObject.connectSlotsByName(Query)
     # setupUi
 
     def retranslateUi(self, Query):
         Query.setWindowTitle(QCoreApplication.translate("Query", u"Query", None))
-        self.lineEdit.setText(QCoreApplication.translate("Query", u"https://google.com/", None))
+        self.URL.setText(QCoreApplication.translate("Query", u"https://google.com/", None))
         self.label.setText(QCoreApplication.translate("Query", u"Make a request to a URL", None))
-        self.pushButton.setText(QCoreApplication.translate("Query", u"Send", None))
+        self.SendButton.setText(QCoreApplication.translate("Query", u"Send", None))
         self.label_2.setText(QCoreApplication.translate("Query", u"Response: ", None))
+        self.ResponseContainer.setText("")
     # retranslateUi
 
