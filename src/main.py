@@ -1,24 +1,28 @@
+import sys
 
-
-import numpy as np
-# pyqtgraph with PySide6 - Ensure that PyQt5/6 are not anywhere near the project
-import PySide6
-import pyqtgraph as pg
-
-
-from qtgui.widget import run 
 from model.model import Model
-
-# 
-
-#import tkinter as tk
+from qtgui.view.view import View
+from qtgui.controller.controller import Controller
 
 def main():
-    #pg.plot(np.array([1,2,3]), np.array([3,2,1]), pen='r') 
-    #input()
     m = Model()
-    run(m)
+    v = View()
+    c = Controller()
     
+    print("Linking MVC Components")
+    m.link(c)
+    v.link(c)
+    c.link(m, v)
+
+    print("start data load in background threads")
+    m.load()
+    m.communicate(lambda : print("Model Thread listening"))
+
+    print("start to trigger buffers and lock main thread Qt/View's event loop")
+    v.start()
+    
+    print("Demo Ending")
+    m.communicate(lambda : sys.exit())
 
 if __name__ == "__main__":
     main()
