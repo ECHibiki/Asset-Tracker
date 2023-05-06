@@ -653,7 +653,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Daily %</string>
+    <string>Todays % Change</string>
    </property>
    <widget class="QTableWidget" name="SimpleTable">
     <property name="geometry">
@@ -689,7 +689,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Today % Performance</string>
+    <string>Interval % Performance</string>
    </property>
    <widget class="PlotWidget" name="PercentPerformancePlot">
     <property name="geometry">

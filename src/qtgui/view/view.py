@@ -18,7 +18,7 @@ from .ui.ui_advanced import Ui_Advanced
 
 # QUERY:  Is this the best way to pass the controller around hmmmm
 
-class View:
+class WindowManager:
     def __init__(self):
         pass
     def link(self, controller):
@@ -40,12 +40,31 @@ class View:
         # adv.show()
         app.exec()
 
+    def createSymbolWidget(self):
+        self.symbols = Ui_NewSymbols.SymbolWidget(controller=self.controller)
+    def createDatesWidget(self):
+        self.dates = Ui_Dates.DatesWidget(controller=self.controller)
+    def createQueryWidget(self):
+        self.q = Ui_Query.QueryWidget(controller=self.controller)
+    def createAdvancedWidget(self):
+        self.adv = Ui_Advanced.AdvancedWidget(controller=self.controller)
+
+    def closeSymbolWidget(self):
+        self.symbols = None
+    def closeDatesWidget(self):
+        self.dates = None
+    def closeQueryWidget(self):
+        self.q = None
+    def closeAdvancedWidget(self):
+        self.adv = None
+
 class MainWidget(QWidget):
     def __init__(self, parent=None, controller=None):
         super().__init__(parent)
         self.ui = Ui_Widget()
         self.ui.setupUi(self)
         self.controller = controller
+        self.setFixedSize(self.size())
 
         self.ui.PercentPerformancePlot.setLimits(xMin=-0.1, xMax=8, minXRange=1, yMin=0, yMax=100)
         self.ui.PercentPerformancePlot.setRange(xRange=(0,5,) , yRange=(0,5,))
@@ -58,10 +77,10 @@ class MainWidget(QWidget):
         xax.setTicks(ticks)
 
     def closeEvent(self, event):
-        print("closeEvent")
+        self.controller.print("closeEvent")
 
     def openSettingsItem(self):
-        self.controller.print(self.sender().objectName())
+        self.controller.openModelItem(self.sender().objectName())
 
 
 class SymbolWidget(QDialog):
@@ -70,9 +89,13 @@ class SymbolWidget(QDialog):
         self.ui = Ui_NewSymbols()
         self.ui.setupUi(self)
         self.controller = controller
+        self.setFixedSize(self.size())
+
+    def closeEvent(self, event):
+        self.controller.symbolWidgetClosed()
 
     def addSymbols(self):
-        self.controller.print(self.ui.SymbolList.toPlainText())
+        self.controller.replaceSymbolList(self.ui.SymbolList.toPlainText())
 
 class DatesWidget(QMainWindow):
     def __init__(self, parent=None, controller=None):
@@ -80,17 +103,21 @@ class DatesWidget(QMainWindow):
         self.ui = Ui_Dates()
         self.ui.setupUi(self)
         self.controller = controller
+        self.setFixedSize(self.size())
 
-        self.is_start = True
+    def closeEvent(self, event):
+        self.controller.datesWidgetClosed()
 
     def dateEffector(self, date):
-        # Set in the perscribed position
-        # If selected dates before other then swap, next action will be an end setters
-        # Else set in true location
-        self.controller.print(date)
+        self.controller.addDateItem(date)
 
     def submitDate(self):
-        self.controller.print(self.ui.StartDate.date(), self.ui.EndDate.date())
+        self.controller.alterDates(self.ui.StartDate.date(), self.ui.EndDate.date())
+
+    def setFirstDate(self, date):
+        pass
+    def setSecondDate(self, date):
+        pass
 
 class QueryWidget(QMainWindow):
     def __init__(self, parent=None, controller=None):
@@ -98,9 +125,16 @@ class QueryWidget(QMainWindow):
         self.ui = Ui_Query()
         self.ui.setupUi(self)
         self.controller = controller
+        self.setFixedSize(self.size())
+
+    def closeEvent(self, event):
+        self.controller.queryWidgetClosed()
 
     def sendRequest(self):
-        self.controller.print(self.sender())
+        self.controller.makeRequest(self.ui.URL.text)
+    
+    def setRequestData(self, data):
+        pass
 
 class AdvancedWidget(QMainWindow):
     def __init__(self, parent=None, controller=None):
@@ -113,3 +147,9 @@ class AdvancedWidget(QMainWindow):
         axe = gl.GLAxisItem(QVector3D(20,20,20))
         self.ui.graphicsView.addItem(xgrid)
         self.ui.graphicsView.addItem(axe)
+        self.setFixedSize(self.size())
+
+    def advancedEvent(self, event):
+        self.controller.advancedWidgetClosed()
+
+        

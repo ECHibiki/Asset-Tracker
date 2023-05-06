@@ -1,10 +1,18 @@
+# T1: Acquire the data from sources
+# T2: Alter the view with the data
+# T3: Add a tangent mode when right clicking on the plot
+# T4: Add volume data to plot
+# T5: Hover over datapoints for raw info
+# T6: Bezier spline or linear interpolation toggle
+# T7: Candlestick or line
+# T8: HQ map window with price as positions
+# T9: Resize issues
+ 
 # data structures numpy
-# Reqwests to yahoo and update view
+# asyncio/aiohttp to yahoo and update view on timer
 
-import requests
-import threading
-import queue
-import time
+import aiohttp
+import asyncio
 
 class Model:
     def __init__(self):
@@ -13,24 +21,41 @@ class Model:
         self.controller = controller
         pass
 
-    def load(self):
-        self.message_queue = queue.Queue()
-        self.lock = threading.Lock()
-        self.lock.acquire()
-        self.model_thread = threading.Thread(name="model", target=modelMain , args=(self.message_queue,self.lock) )
-        self.model_thread.start()
+    # When data fetching is needed create an asyncio action    
+    # if a window is closed then related functions should not execute. 
+    # Class needs these handlers
 
-    def communicate(self, callback):
-        self.message_queue.put(callback)
-        self.lock.release()
+    def openSymbols(self):
+        pass
+    def openDates(self):
+        pass
+    def openQuery(self):
+        pass
+    def openAdvanced(self):
+        pass
 
-def modelMain(message_queue , lock):
-    print("Model thread waiting")
-    while True:
-        lock.acquire()
-        print("Model thread unlocked")
-        message = message_queue.get()
-        if callable(message):
-            message()
-        else:
-            print(message)
+    def clearSymbolVars(self):
+        pass
+    def clearDatesVars(self):
+        pass
+    def clearQueryVars(self):
+        pass
+    def clearAdvancedVars(self):
+        pass
+
+    def newSymbolList(self, symbols):
+        # this function should effect the main window in showing new symbols to display
+        # Use a general reference to a dict item
+        pass
+
+    def addDateItem(self, date):
+        # check where the date should be opened
+        pass
+
+    def setDateRange(self, start_date, end_date):
+        # this function should effect the main window in showing new date ranges on relevant data
+        # Use a general reference to a dict item
+        pass
+
+    def sendRequest(self, url):
+        pass
