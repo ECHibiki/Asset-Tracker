@@ -28,12 +28,16 @@ class Controller:
     
     def symbolWidgetClosed(self):
         self.model.clearSymbolVars()
+        print("Window Closed")
     def datesWidgetClosed(self):
         self.model.clearDatesVars()
+        print("Window Closed")
     def queryWidgetClosed(self):
         self.model.clearQueryVars()
+        print("Window Closed")
     def symbolAdvancedClosed(self):
         self.model.clearAdvancedVars()
+        print("Window Closed")
 
     def replaceSymbolList(self, items):
         self.model.newSymbolList(items)
