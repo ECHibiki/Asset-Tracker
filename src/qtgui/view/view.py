@@ -7,6 +7,7 @@ import numpy as np
 
 from PySide6.QtWidgets import QApplication, QWidget, QDialog, QMainWindow
 from PySide6.QtGui import QVector3D
+from PySide6.QtCore import QDate
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -77,11 +78,33 @@ class MainWidget(QWidget):
         # plot data: x, y values
         self.ui.PercentPerformancePlot.plot(hour, temperature)
 
+        hour = [1,2,3,4,5,6,7,8,9,10]
+        temperature.reverse()
+        self.ui.PercentPerformancePlot.plot(hour, temperature)
+
+        
     def closeEvent(self, event):
         self.controller.print("closeEvent")
 
     def openSettingsItem(self):
         self.controller.openModelItem(self.sender().objectName())
+
+    def plotGraph(self, points):
+        # Clear existing plots
+        # set axis
+        # for each symbol
+            # set X
+            # set Y
+            # self.ui.PercentPerformancePlot.plot
+        pass
+    def graphPercents(self, perc):
+        # clear graph
+        # for each symbol
+            # set percent
+            # asign to index position
+        pass
+    def tableDetails(self, details):
+        pass
 
 
 class SymbolWidget(QDialog):
@@ -109,7 +132,7 @@ class DatesWidget(QMainWindow):
     def closeEvent(self, event):
         self.controller.datesWidgetClosed()
 
-    def dateEffector(self, date):
+    def dateEffector(self, date: QDate):
         self.controller.addDateItem(date)
 
     def submitDate(self):

@@ -86,3 +86,6 @@ class Controller:
     
     def setRequestData(self, data):
         self.view.q.setRequestData(data)
+
+    def setMainData(self, data_dict):
+        pass
