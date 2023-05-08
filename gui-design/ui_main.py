@@ -25,7 +25,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(541, 490)
+        Widget.resize(544, 522)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -34,7 +34,7 @@ class Ui_Widget(object):
         Widget.setMinimumSize(QSize(100, 0))
         self.groupBox = QGroupBox(Widget)
         self.groupBox.setObjectName(u"groupBox")
-        self.groupBox.setGeometry(QRect(0, 0, 541, 51))
+        self.groupBox.setGeometry(QRect(0, 0, 541, 41))
         sizePolicy1 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
@@ -127,7 +127,7 @@ class Ui_Widget(object):
         self.groupBox.setAutoFillBackground(True)
         self.horizontalLayoutWidget = QWidget(self.groupBox)
         self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
-        self.horizontalLayoutWidget.setGeometry(QRect(0, 10, 531, 31))
+        self.horizontalLayoutWidget.setGeometry(QRect(0, 3, 531, 30))
         self.horizontalLayout = QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
@@ -185,34 +185,30 @@ class Ui_Widget(object):
 
         self.horizontalLayout.addWidget(self.ThreeDButton)
 
+        self.MapButton = QPushButton(self.horizontalLayoutWidget)
+        self.MapButton.setObjectName(u"MapButton")
+        icon4 = QIcon(QIcon.fromTheme(u"emblem-photos"))
+        self.MapButton.setIcon(icon4)
+
+        self.horizontalLayout.addWidget(self.MapButton)
+
+        self.DolarPlot = QPushButton(self.horizontalLayoutWidget)
+        self.DolarPlot.setObjectName(u"DolarPlot")
+        icon5 = QIcon(QIcon.fromTheme(u"zoom-in"))
+        self.DolarPlot.setIcon(icon5)
+
+        self.horizontalLayout.addWidget(self.DolarPlot)
+
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
         self.groupBox_2 = QGroupBox(Widget)
         self.groupBox_2.setObjectName(u"groupBox_2")
-        self.groupBox_2.setGeometry(QRect(0, 340, 541, 151))
+        self.groupBox_2.setGeometry(QRect(0, 355, 545, 167))
         self.AdvancedTable = QTableWidget(self.groupBox_2)
-        if (self.AdvancedTable.columnCount() < 2):
-            self.AdvancedTable.setColumnCount(2)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.AdvancedTable.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.AdvancedTable.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        if (self.AdvancedTable.rowCount() < 5):
-            self.AdvancedTable.setRowCount(5)
-        __qtablewidgetitem2 = QTableWidgetItem()
-        self.AdvancedTable.setVerticalHeaderItem(0, __qtablewidgetitem2)
-        __qtablewidgetitem3 = QTableWidgetItem()
-        self.AdvancedTable.setVerticalHeaderItem(1, __qtablewidgetitem3)
-        __qtablewidgetitem4 = QTableWidgetItem()
-        self.AdvancedTable.setVerticalHeaderItem(2, __qtablewidgetitem4)
-        __qtablewidgetitem5 = QTableWidgetItem()
-        self.AdvancedTable.setVerticalHeaderItem(3, __qtablewidgetitem5)
-        __qtablewidgetitem6 = QTableWidgetItem()
-        self.AdvancedTable.setVerticalHeaderItem(4, __qtablewidgetitem6)
         self.AdvancedTable.setObjectName(u"AdvancedTable")
-        self.AdvancedTable.setGeometry(QRect(0, 20, 541, 131))
+        self.AdvancedTable.setGeometry(QRect(0, 20, 545, 148))
         sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
@@ -220,23 +216,26 @@ class Ui_Widget(object):
         self.AdvancedTable.setSizePolicy(sizePolicy2)
         self.groupBox_3 = QGroupBox(Widget)
         self.groupBox_3.setObjectName(u"groupBox_3")
-        self.groupBox_3.setGeometry(QRect(380, 50, 161, 291))
+        self.groupBox_3.setGeometry(QRect(373, 42, 171, 309))
         self.SimpleTable = QTableWidget(self.groupBox_3)
-        if (self.SimpleTable.columnCount() < 2):
-            self.SimpleTable.setColumnCount(2)
-        __qtablewidgetitem7 = QTableWidgetItem()
-        self.SimpleTable.setHorizontalHeaderItem(0, __qtablewidgetitem7)
-        __qtablewidgetitem8 = QTableWidgetItem()
-        self.SimpleTable.setHorizontalHeaderItem(1, __qtablewidgetitem8)
         self.SimpleTable.setObjectName(u"SimpleTable")
-        self.SimpleTable.setGeometry(QRect(0, 20, 161, 271))
-        self.SimpleTable.horizontalHeader().setDefaultSectionSize(79)
+        self.SimpleTable.setGeometry(QRect(0, 18, 171, 291))
+        self.SimpleTable.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.SimpleTable.horizontalHeader().setVisible(True)
+        self.SimpleTable.horizontalHeader().setDefaultSectionSize(83)
+        self.SimpleTable.verticalHeader().setVisible(False)
+        self.SimpleTable.verticalHeader().setHighlightSections(True)
         self.groupBox_4 = QGroupBox(Widget)
         self.groupBox_4.setObjectName(u"groupBox_4")
-        self.groupBox_4.setGeometry(QRect(0, 50, 371, 291))
+        self.groupBox_4.setGeometry(QRect(0, 41, 371, 311))
         self.PercentPerformancePlot = PlotWidget(self.groupBox_4)
         self.PercentPerformancePlot.setObjectName(u"PercentPerformancePlot")
-        self.PercentPerformancePlot.setGeometry(QRect(0, 20, 371, 271))
+        self.PercentPerformancePlot.setGeometry(QRect(0, 19, 371, 291))
+        self.pushButton = QPushButton(self.groupBox_4)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setGeometry(QRect(130, 2, 54, 14))
+        icon6 = QIcon(QIcon.fromTheme(u"application-x-executable"))
+        self.pushButton.setIcon(icon6)
 
         self.retranslateUi(Widget)
         self.SymbolButton.clicked.connect(Widget.openSettingsItem)
@@ -266,26 +265,14 @@ class Ui_Widget(object):
         self.ThreeDButton.setToolTip(QCoreApplication.translate("Widget", u"3D Chart", None))
 #endif // QT_CONFIG(tooltip)
         self.ThreeDButton.setText("")
-        self.groupBox_2.setTitle(QCoreApplication.translate("Widget", u"Daily Complex", None))
-        ___qtablewidgetitem = self.AdvancedTable.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("Widget", u"1992/02/01", None));
-        ___qtablewidgetitem1 = self.AdvancedTable.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("Widget", u"1992/02/02", None));
-        ___qtablewidgetitem2 = self.AdvancedTable.verticalHeaderItem(0)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("Widget", u"Symbol", None));
-        ___qtablewidgetitem3 = self.AdvancedTable.verticalHeaderItem(1)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("Widget", u"Market Cap", None));
-        ___qtablewidgetitem4 = self.AdvancedTable.verticalHeaderItem(2)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("Widget", u"P/E", None));
-        ___qtablewidgetitem5 = self.AdvancedTable.verticalHeaderItem(3)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("Widget", u"EPS", None));
-        ___qtablewidgetitem6 = self.AdvancedTable.verticalHeaderItem(4)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("Widget", u"Volume", None));
-        self.groupBox_3.setTitle(QCoreApplication.translate("Widget", u"Daily %", None))
-        ___qtablewidgetitem7 = self.SimpleTable.horizontalHeaderItem(0)
-        ___qtablewidgetitem7.setText(QCoreApplication.translate("Widget", u"Symbol", None));
-        ___qtablewidgetitem8 = self.SimpleTable.horizontalHeaderItem(1)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("Widget", u"Today(%)", None));
-        self.groupBox_4.setTitle(QCoreApplication.translate("Widget", u"Today % Performance", None))
+#if QT_CONFIG(tooltip)
+        self.MapButton.setToolTip(QCoreApplication.translate("Widget", u"Map View", None))
+#endif // QT_CONFIG(tooltip)
+        self.MapButton.setText("")
+        self.DolarPlot.setText("")
+        self.groupBox_2.setTitle(QCoreApplication.translate("Widget", u"Symbol Details", None))
+        self.groupBox_3.setTitle(QCoreApplication.translate("Widget", u"Todays $ Value", None))
+        self.groupBox_4.setTitle(QCoreApplication.translate("Widget", u"Daily % Performance", None))
+        self.pushButton.setText(QCoreApplication.translate("Widget", u"Mode", None))
     # retranslateUi
 

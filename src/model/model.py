@@ -13,6 +13,7 @@
 # T3: Candlestick and/or line
 # T3: Bezier spline or linear interpolation toggle
 # T3: HQ map window with price as positions
+# T3: matplotlib $ plot 
 
 ## Thu
 # T4: Buffering icons and load notifier
@@ -24,8 +25,10 @@ import asyncio
 import threading
 import datetime
 import re
+import random
 import numpy as np
 import yfinance as yf
+import pyqtgraph as pg
 
 from PySide6.QtCore import QDate
 
@@ -151,6 +154,14 @@ class Model:
                 self.data_list[symbol]["low"].append(history.Low)
                 self.data_list[symbol]["close"].append(history.Close)
                 self.data_list[symbol]["volume"].append(history.Volume)
+            
+            r = random.randint(0, 255)
+            g = random.randint(0, 255)
+            b = random.randint(0, 255)
+
+            # Combine the values into a hex color code
+            color_code = "#{:02x}{:02x}{:02x}".format(r, g, b)
+            self.data_list[symbol]["color"] = pg.mkPen(width=2,color=color_code)
         except:
             del self.data_list[symbol]
             print("Symbol err", symbol)
@@ -167,7 +178,7 @@ class Model:
         plot_data = dict()
         yesterday = 0
         for symbol, data in self.data_list.items( ):
-            plot_data[symbol] =  []
+            plot_data[symbol] =  {"y": [] , "style": data["color"] }
             c = 0
             for i , close in enumerate(data["close"]):
                 if yesterday == 0:
@@ -175,7 +186,7 @@ class Model:
                 elif not self.inTimeRange(data["day"][i]):
                     yesterday = close
                 else:
-                    plot_data[symbol].append( self.percentDifference( close , yesterday ) * 100 )
+                    plot_data[symbol]["y"].append( self.percentDifference( close , yesterday ) * 100 )
                     yesterday = close
                     c  = c  + 1
         return plot_data

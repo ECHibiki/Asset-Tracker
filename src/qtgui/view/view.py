@@ -8,7 +8,7 @@ import datetime
 
 from PySide6.QtWidgets import QApplication, QWidget, QDialog, QMainWindow , QTableWidgetItem
 from PySide6.QtGui import QVector3D
-from PySide6.QtCore import QDate
+from PySide6.QtCore import QDate, Qt
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -82,6 +82,10 @@ class MainWidget(QWidget):
         xax = self.ui.PercentPerformancePlot.getAxis('bottom')
 #        And finally set the ticks of the axis like so:
         xax.setTicks(ticks)
+        xax.setLabel("Month/Day")
+
+        yax = self.ui.PercentPerformancePlot.getAxis('left')
+        yax.setLabel("Percent Change")
 
         hour = [0, 1,2,3,4,5,6,7,8,9,10]
         temperature = [20, 30,32,34,32,33,31,29,32,35,45]
@@ -107,13 +111,27 @@ class MainWidget(QWidget):
             return
         mini = 100
         maxi = -100
-        for symbol, y in points.items():
-            x = range(len(y))
-            if min(y) < mini:
-                mini = min(y)
-            if max(y) > maxi:
-                maxi = max(y)
-            self.ui.PercentPerformancePlot.plot(x, y)
+        self.plot_labels = dict()
+        count = 0
+        for symbol, symbol_data in points.items():
+
+            x = range(len(symbol_data["y"]))
+            if min(symbol_data["y"]) < mini:
+                mini = min(symbol_data["y"])
+            if max(symbol_data["y"]) > maxi:
+                maxi = max(symbol_data["y"])
+           
+            self.ui.PercentPerformancePlot.plot(x, symbol_data["y"], pen=symbol_data["style"])
+            
+            label = pg.TextItem()
+            label.setText(symbol, symbol_data["style"].color())
+            label.setAnchor((1,1,))
+            label.setPos(len(x)-0.5, 1.0 - count)
+            count = count + 0.5
+
+            # Add the text item to the plot item
+            self.ui.PercentPerformancePlot.addItem(label)
+        
         self.ui.PercentPerformancePlot.setRange( yRange=( mini , maxi, ) )
         pass
     def setAxis(self, axis):
@@ -135,11 +153,15 @@ class MainWidget(QWidget):
         self.ui.SimpleTable.setColumnCount(2)
 
         self.ui.SimpleTable.setHorizontalHeaderLabels(["Symbol" , "Value"])
+        symb_header = self.ui.SimpleTable.horizontalHeader()
+        symb_header.sectionClicked.connect( lambda x : self.ui.SimpleTable.sortByColumn(x, Qt.AscendingOrder) )
+# 
         r = 0
         for symbol, value in dollars.items():
             self.ui.SimpleTable.setItem(r , 0 , QTableWidgetItem(symbol))
             self.ui.SimpleTable.setItem(r , 1 , QTableWidgetItem(value))
             r = r + 1
+
     def setTableDetails(self, details):
         self.ui.AdvancedTable.setRowCount(0)
         self.ui.AdvancedTable.setColumnCount(0)
@@ -158,7 +180,7 @@ class MainWidget(QWidget):
 
         self.ui.AdvancedTable.setVerticalHeaderLabels(keys)
         self.ui.AdvancedTable.setHorizontalHeaderLabels(labels)
-
+        
         r = 0
         col = 0
         for _, data in details.items():

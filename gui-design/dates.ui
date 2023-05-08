@@ -42,7 +42,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Select a date range (Start)</string>
+     <string>Select a date range</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">

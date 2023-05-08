@@ -16,7 +16,7 @@
   <widget class="QLineEdit" name="URL">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>20</x>
      <y>40</y>
      <width>181</width>
      <height>21</height>
@@ -76,6 +76,22 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="ResponseCode">
+   <property name="geometry">
+    <rect>
+     <x>79</x>
+     <y>90</y>
+     <width>58</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

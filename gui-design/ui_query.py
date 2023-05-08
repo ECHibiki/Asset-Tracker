@@ -25,7 +25,7 @@ class Ui_Query(object):
         Query.resize(221, 138)
         self.URL = QLineEdit(Query)
         self.URL.setObjectName(u"URL")
-        self.URL.setGeometry(QRect(30, 40, 181, 21))
+        self.URL.setGeometry(QRect(20, 40, 181, 21))
         self.label = QLabel(Query)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(40, 10, 181, 16))
@@ -38,6 +38,10 @@ class Ui_Query(object):
         self.ResponseContainer = QLabel(Query)
         self.ResponseContainer.setObjectName(u"ResponseContainer")
         self.ResponseContainer.setGeometry(QRect(80, 90, 61, 16))
+        self.ResponseCode = QLabel(Query)
+        self.ResponseCode.setObjectName(u"ResponseCode")
+        self.ResponseCode.setGeometry(QRect(79, 90, 58, 15))
+        self.ResponseCode.setAlignment(Qt.AlignCenter)
 
         self.retranslateUi(Query)
         self.SendButton.clicked.connect(Query.sendRequest)
@@ -52,5 +56,6 @@ class Ui_Query(object):
         self.SendButton.setText(QCoreApplication.translate("Query", u"Send", None))
         self.label_2.setText(QCoreApplication.translate("Query", u"Response: ", None))
         self.ResponseContainer.setText("")
+        self.ResponseCode.setText("")
     # retranslateUi
 

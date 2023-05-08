@@ -92,7 +92,9 @@ class Controller:
         self.view.q.setRequestData(data)
 
     def setMainData(self, plot_data, dollar_data , advanced_data, date_range ):
+
         self.view.setAxis( date_range)
+
         self.view.buildDolarTable(dollar_data)
         self.view.buildDetailsTable(advanced_data)
         self.view.buildPlotData(plot_data)

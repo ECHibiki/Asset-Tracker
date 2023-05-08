@@ -63,7 +63,7 @@ class Ui_Dates(object):
 
     def retranslateUi(self, Dates):
         Dates.setWindowTitle(QCoreApplication.translate("Dates", u"Date Picker", None))
-        self.label.setText(QCoreApplication.translate("Dates", u"Select a date range (Start)", None))
+        self.label.setText(QCoreApplication.translate("Dates", u"Select a date range", None))
         self.label_2.setText(QCoreApplication.translate("Dates", u"Start", None))
         self.label_3.setText(QCoreApplication.translate("Dates", u"End", None))
         self.pushButton.setText(QCoreApplication.translate("Dates", u"Confirm", None))
