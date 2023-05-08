@@ -14,9 +14,9 @@ def main():
     v.link(c)
     c.link(v , m)
 
-    print("start to trigger buffers and lock main thread Qt/View's event loop")
+
+    print("start to trigger")
     v.start()
-    
     print("Demo Ending")
     sys.exit()
 

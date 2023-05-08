@@ -1,5 +1,9 @@
+import asyncio
+import aiohttp
+
 class Controller:
     def __init__(self):
+        self.loop = asyncio.get_event_loop()
         pass
     
     def link(self, view, model):
@@ -49,7 +53,7 @@ class Controller:
         self.model.setDateRange(start_date, end_date)
 
     def makeRequest(self, url):
-        self.model.sendRequest(url)
+        asyncio.run(self.model.sendRequest(url))
 
     """
     ------- M -> C -> V -------  
@@ -87,5 +91,9 @@ class Controller:
     def setRequestData(self, data):
         self.view.q.setRequestData(data)
 
-    def setMainData(self, data_dict):
+    def setMainData(self, plot_data, dollar_data , advanced_data, date_range ):
+        self.view.setAxis( date_range)
+        self.view.buildDolarTable(dollar_data)
+        self.view.buildDetailsTable(advanced_data)
+        self.view.buildPlotData(plot_data)
         pass
