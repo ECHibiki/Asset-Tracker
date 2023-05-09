@@ -24,7 +24,7 @@ from .ui.ui_advanced import Ui_Advanced
 
 class WindowManager:
     def __init__(self):
-        pass
+        pg.setConfigOptions(antialias=True)
     def link(self, controller):
         self.controller = controller
 
@@ -107,18 +107,46 @@ class MainWidget(QWidget):
 
         hour = [0, 1.5,2.5,3,4.5,5,6.5,7,8,9,10]
         temperature.reverse()
-        l =self.ui.PercentPerformancePlot.plot(hour, temperature)
+        l =self.ui.PercentPerformancePlot.plot(hour, temperature,symbol='s', pen=pg.mkPen(width=2))
+        l.setCurveClickable(True, width=10)
+        l.sigClicked.connect(self.labelPoint)
+        # l.setZValue(10)
+        # print(l.childItems()[0].clickable)
+        # l.childItems()[0].sigClicked.connect(self.labelPoint)
+
+        # object_methods = [method_name for method_name in dir(l)
+        #           if callable(getattr(l, method_name))]
+        # print(object_methods)
         
         bg = pg.BarGraphItem(x=range(5), height=[1,5,2,4,3], width=0.5)
         self.volume_plot.addItem(bg)
 
         proxy = self.p1.scene().sigMouseClicked.connect(self.drawLine)
-        # proxy = self.p1.scene().sigMouseHover.connect(print)
+        # proxy = self.p1.scene().sigPointsHovered.connect(self.labelPoint)
         self.sp = []
+
+    def labelPoint(self , pt, mclk):
+        print(self, pt, mclk)
+        if not mclk.double():
+            if hasattr(self, "value_label"):
+                self.ui.PercentPerformancePlot.removeItem(self.value_label)
+            mousePoint = self.p1.vb.mapSceneToView(mclk.scenePos())
+            print (mousePoint.x() , mousePoint.y())
+            # print (pt.setClipToView(False) , pt.setClipToView(True))
+            self.value_label = pg.TextItem( "({:,.2f},{:,.2f})".format((mousePoint.x()), (mousePoint.y()) ) , color="red", fill="#00000033") 
+            self.ui.PercentPerformancePlot.addItem(self.value_label)
+            self.value_label.setPos(mousePoint.x() , mousePoint.y())
+
+    def clearValueLabel(self):
+        if hasattr(self, "value_label"):
+            self.ui.PercentPerformancePlot.removeItem(self.value_label)
+        pass
 
     def drawLine(self, mclk):
         try:
             if mclk.double():
+                self.clearValueLabel()
+
                 mousePoint = self.p1.vb.mapSceneToView(mclk.scenePos())
                 angle = 0
                 pt_pos = ( mousePoint.x() , mousePoint.y() ,)
@@ -200,7 +228,13 @@ class MainWidget(QWidget):
                 vol_maxi = max(symbol_data["vol"])
            
             self.ui.PercentPerformancePlot.addLegend()
-            self.ui.PercentPerformancePlot.plot(x, symbol_data["close"], pen=symbol_data["style"], symbol="s" , name=symbol)
+            l = self.ui.PercentPerformancePlot.plot(x, symbol_data["close"], pen=symbol_data["style"], symbol="s" , name=symbol, hoverable=True)
+            print(l.curveClickable())
+            l.setCurveClickable(True, width=10)
+            l.sigClicked.connect(self.labelPoint)
+            # l.setZValue(10)
+            print(l.curveClickable())
+            # l.sigPointsHovered.connect(self.labelPoint)
             
             xo = []
             xi = []

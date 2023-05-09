@@ -20,8 +20,8 @@
     # PlotCurveItem
 
 ## Wed
-# T3: Candlestick and/or line
 # T3: Bezier spline or linear interpolation toggle
+# T3: Candlestick mode
 # T3: matplotlib-basemap HQ map window with price as positions
 
 ## Thu
