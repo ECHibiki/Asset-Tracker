@@ -1,3 +1,6 @@
+# matplotlib == easy and flexible, lots of docs
+# pyqtgraph == performant and animations, lots of flexibility
+
 ## Mon
 # T1: Acquire the data from sources
 # T1: Alter the view with the data
@@ -5,20 +8,27 @@
 # T1: Graph labels
 
 ## Tue
-# T2: Add a tangent mode when right clicking on the plot
 # T2: Add volume data to plot as overlapping bar graph
-# T2: Hover over datapoints or bar for raw info
+    # MultiplePlotAxes.py
+    # https://stackoverflow.com/questions/70435112/pyqtgraph-stacked-bar-graph
+# T2: Add a tangent mode when right clicking on the plot 
+    # InfiniteLine 
+    # https://stackoverflow.com/questions/64564469/how-to-get-mouse-cursor-coordinates-on-a-pyqtgraph-widget
+# T2: Hover over datapoints or bar for raw info 
+    # https://pyqtgraph.readthedocs.io/en/latest/api_reference/graphicsItems/plotdataitem.html
+    # setCurveClickable
+    # PlotCurveItem
 
 ## Wed
 # T3: Candlestick and/or line
 # T3: Bezier spline or linear interpolation toggle
-# T3: HQ map window with price as positions
-# T3: matplotlib $ plot 
+# T3: matplotlib-basemap HQ map window with price as positions
 
 ## Thu
-# T4: Buffering icons and load notifier
-# T4: Resize issues
-# T4: .exe
+# T4: matplotlib $ plot interactive mode
+# T4: Graph Lables
+# T4: Curve hover 
+# T4: Line
  
 import aiohttp
 import asyncio
@@ -161,7 +171,7 @@ class Model:
 
             # Combine the values into a hex color code
             color_code = "#{:02x}{:02x}{:02x}".format(r, g, b)
-            self.data_list[symbol]["color"] = pg.mkPen(width=2,color=color_code)
+            self.data_list[symbol]["color"] = pg.mkPen(width=2,color=color_code,foreground=color_code,background=color_code,brush=color_code)
         except:
             del self.data_list[symbol]
             print("Symbol err", symbol)
@@ -176,18 +186,35 @@ class Model:
     def buildPlotData(self):
         # from the dataset return a new set of plot points over the time interval
         plot_data = dict()
-        yesterday = 0
+        yesterday = dict()
         for symbol, data in self.data_list.items( ):
-            plot_data[symbol] =  {"y": [] , "style": data["color"] }
+            plot_data[symbol] =  {"close": [] , "open": [] , "high": [] , "low": [] , "vol": [], "style": data["color"] }
             c = 0
             for i , close in enumerate(data["close"]):
-                if yesterday == 0:
-                    yesterday = close 
+                if len(yesterday) == 0:
+                    yesterday["close"] = close 
+                    yesterday["open"] =  data["open"][i] 
+                    yesterday["high"] =  data["high"][i] 
+                    yesterday["low"] =  data["low"][i] 
+                    yesterday["volume"] =  data["volume"][i] 
                 elif not self.inTimeRange(data["day"][i]):
-                    yesterday = close
+                    yesterday["close"] = close
+                    yesterday["open"] =  data["open"][i] 
+                    yesterday["high"] =  data["high"][i] 
+                    yesterday["low"] =  data["low"][i] 
+                    yesterday["volume"] =  data["volume"][i] 
                 else:
-                    plot_data[symbol]["y"].append( self.percentDifference( close , yesterday ) * 100 )
-                    yesterday = close
+                    plot_data[symbol]["close"].append( self.percentDifference( close , yesterday["close"] ) * 100 )
+                    plot_data[symbol]["open"].append( self.percentDifference( data["open"][i]  , yesterday["open"] ) * 100 )
+                    plot_data[symbol]["high"].append( self.percentDifference( data["high"][i]  , yesterday["high"] ) * 100 )
+                    plot_data[symbol]["low"].append( self.percentDifference( data["low"][i]  , yesterday["low"] ) * 100 )
+                    plot_data[symbol]["vol"].append( self.percentDifference( data["volume"][i] , yesterday["volume"] ) * 100 )
+                    
+                    yesterday["close"] = close
+                    yesterday["open"] =  data["open"][i] 
+                    yesterday["high"] =  data["high"][i] 
+                    yesterday["low"] =  data["low"][i] 
+                    yesterday["volume"] =  data["volume"][i] 
                     c  = c  + 1
         return plot_data
     def buildDollarData(self):

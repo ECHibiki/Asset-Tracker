@@ -4,7 +4,7 @@ import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 
 import numpy as np
-import datetime
+import random
 
 from PySide6.QtWidgets import QApplication, QWidget, QDialog, QMainWindow , QTableWidgetItem
 from PySide6.QtGui import QVector3D
@@ -80,12 +80,25 @@ class MainWidget(QWidget):
         ticks = [list(zip(range(8), ( '5/9', '5/10', '5/11', '5/12', '5/13','5/14','5/15', '5/16' )))]
 #        You can get an existing AxisItem of a PlotWidget like so:
         xax = self.ui.PercentPerformancePlot.getAxis('bottom')
-#        And finally set the ticks of the axis like so:
         xax.setTicks(ticks)
         xax.setLabel("Month/Day")
 
         yax = self.ui.PercentPerformancePlot.getAxis('left')
-        yax.setLabel("Percent Change")
+        yax.setLabel("Percent Value Change")
+        
+        self.p1 = self.ui.PercentPerformancePlot.plotItem
+        self.volume_plot = pg.ViewBox()
+        self.p1.showAxis('right')
+        self.p1.scene().addItem(self.volume_plot)
+        self.p1.getAxis('right').linkToView(self.volume_plot)
+        self.volume_plot.setXLink(self.p1)
+        self.p1.getAxis('right').setLabel('Percent Volume Change')
+
+        self.volume_plot.setRange(xRange=(0,5,) , yRange=(-10,10,))
+
+        self.updateViews()
+        self.p1.vb.sigResized.connect(self.updateViews)
+
 
         hour = [0, 1,2,3,4,5,6,7,8,9,10]
         temperature = [20, 30,32,34,32,33,31,29,32,35,45]
@@ -94,9 +107,68 @@ class MainWidget(QWidget):
 
         hour = [0, 1.5,2.5,3,4.5,5,6.5,7,8,9,10]
         temperature.reverse()
-        self.ui.PercentPerformancePlot.plot(hour, temperature)
-
+        l =self.ui.PercentPerformancePlot.plot(hour, temperature)
         
+        bg = pg.BarGraphItem(x=range(5), height=[1,5,2,4,3], width=0.5)
+        self.volume_plot.addItem(bg)
+
+        proxy = self.p1.scene().sigMouseClicked.connect(self.drawLine)
+        # proxy = self.p1.scene().sigMouseHover.connect(print)
+        self.sp = []
+
+    def drawLine(self, mclk):
+        try:
+            if mclk.double():
+                mousePoint = self.p1.vb.mapSceneToView(mclk.scenePos())
+                angle = 0
+                pt_pos = ( mousePoint.x() , mousePoint.y() ,)
+                
+                r = random.randint(0, 255)
+                g = random.randint(0, 255)
+                b = random.randint(0, 255)
+
+                # Combine the values into a hex color code
+                color_code = "#{:02x}{:02x}{:02x}".format(r, g, b)
+                pi = pg.ScatterPlotItem([pt_pos[0]], [pt_pos[1]] , symbol='o', brush=color_code)
+                self.sp.append(pi)
+                if len(self.sp) > 2:
+                    self.ui.PercentPerformancePlot.removeItem(self.sp[0])
+                    del self.sp[0]    
+                self.ui.PercentPerformancePlot.addItem(pi)
+                
+
+                if hasattr(self, "line_p1" ):
+                    x = mousePoint.x() - self.line_p1[0]
+                    y = mousePoint.y() - self.line_p1[1]
+                    h = np.sqrt( x*x + y*y )
+                    angle = np.degrees( np.arcsin( y / h) )
+                    if x < 0 :
+                        angle = angle * -1
+                else:
+                    self.line_p1 = ( mousePoint.x() , mousePoint.y() ,)
+
+
+                if mousePoint.x()+1 < self.line_p1[0]:
+                    pt_pos = self.line_p1
+                
+                self.line_p1 = ( mousePoint.x() , mousePoint.y() ,)
+
+                
+                if hasattr(self, "inf_line" ):
+                    self.p1.vb.removeItem(self.inf_line)
+                self.inf_line = pg.InfiniteLine(pt_pos , angle=angle)
+                self.p1.vb.addItem(self.inf_line)
+        except Exception as e:
+            print("Draw line err" , e)
+        
+    def updateViews(self):
+        self.volume_plot.setGeometry(self.p1.vb.sceneBoundingRect())
+        
+        ## need to re-update linked axes since this was called
+        ## incorrectly while views had different shapes.
+        ## (probably this should be handled in ViewBox.resizeEvent)
+        self.volume_plot.linkedViewChanged(self.p1.vb, self.volume_plot.XAxis)
+            
     def closeEvent(self, event):
         self.controller.print("closeEvent")
 
@@ -106,32 +178,41 @@ class MainWidget(QWidget):
     def plotGraph(self, points):
         # Clear existing plots
         self.ui.PercentPerformancePlot.plotItem.clear()
+        self.volume_plot.clear()
         print(points)
         if len(points) == 0:
             return
         mini = 100
         maxi = -100
-        self.plot_labels = dict()
+        vol_mini = 100
+        vol_maxi = -100
         count = 0
         for symbol, symbol_data in points.items():
 
-            x = range(len(symbol_data["y"]))
-            if min(symbol_data["y"]) < mini:
-                mini = min(symbol_data["y"])
-            if max(symbol_data["y"]) > maxi:
-                maxi = max(symbol_data["y"])
+            x = range(len(symbol_data["close"]))
+            if min(symbol_data["close"]) < mini:
+                mini = min(symbol_data["close"])
+            if max(symbol_data["close"]) > maxi:
+                maxi = max(symbol_data["close"])
+            if min(symbol_data["vol"]) < vol_mini:
+                vol_mini = min(symbol_data["vol"])
+            if max(symbol_data["vol"]) > vol_maxi:
+                vol_maxi = max(symbol_data["vol"])
            
-            self.ui.PercentPerformancePlot.plot(x, symbol_data["y"], pen=symbol_data["style"])
+            self.ui.PercentPerformancePlot.addLegend()
+            self.ui.PercentPerformancePlot.plot(x, symbol_data["close"], pen=symbol_data["style"], symbol="s" , name=symbol)
             
-            label = pg.TextItem()
-            label.setText(symbol, symbol_data["style"].color())
-            label.setAnchor((1,1,))
-            label.setPos(len(x)-0.5, 1.0 - count)
-            count = count + 0.5
+            xo = []
+            xi = []
+            for pos in x:
+                xo.append(pos + count)
+                xi.append(pos + count + 1 / len(points))
+            count = count + 1 / len(points)
+            bg = pg.BarGraphItem(x0=xo, x1=xi, height=symbol_data["vol"], pen="black", brush=symbol_data["style"].brush() )
+            self.volume_plot.addItem(bg)
 
-            # Add the text item to the plot item
-            self.ui.PercentPerformancePlot.addItem(label)
-        
+      
+        self.volume_plot.setRange( yRange=(vol_mini * 2, vol_maxi * 2,))
         self.ui.PercentPerformancePlot.setRange( yRange=( mini , maxi, ) )
         pass
     def setAxis(self, axis):
