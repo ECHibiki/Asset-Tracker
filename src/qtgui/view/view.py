@@ -13,6 +13,8 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationTool
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
+import cartopy.io.shapereader as shrp
+import cartopy
 
 
 
@@ -361,13 +363,13 @@ class MapForm(QMainWindow):
 
         # Create the maptlotlib FigureCanvas object,
         # which defines a single set of axes as self.axes.
-        sc = MapWidget(self, width=5, height=4, dpi=100)
+        self.sc = MapWidget(self, width=10, height=10, dpi=100)
 
-        toolbar = NavigationToolbar(sc, self)
+        toolbar = NavigationToolbar(self.sc, self)
 
         layout = QVBoxLayout()
         layout.addWidget(toolbar)
-        layout.addWidget(sc)
+        layout.addWidget(self.sc)
         
         widget = QWidget()
         widget.setLayout(layout)
@@ -377,6 +379,42 @@ class MapForm(QMainWindow):
         self.show()
 
     def plotMap(self, dataset):
+        resolution = '10m'
+        category = 'cultural'
+        name = 'admin_0_countries'
+        shpfilename = shrp.natural_earth(resolution, category, name)
+        reader = shrp.Reader(shpfilename)
+        countries = reader.records()
+
+        
+        country_power = dict()
+        for _, data in dataset.items():
+            cn = "ATA"
+            if data["advanced"]["country"] == "Canada":
+                cn = "CAN"
+            elif data["advanced"]["country"] == "United States":
+                cn = "USA"    
+            print(data["advanced"]["country"])
+            if country_power.get(cn) == None:
+                country_power[cn] = 0
+            country_power[cn] = country_power[cn] + data["close"][-1]
+        maxi = max(country_power.values())
+    
+        print(country_power, maxi)
+        weights = dict()
+        for count, data in country_power.items():
+            weights[count] = (0,0, data / maxi)
+        print(weights)
+        for country in countries:
+            if country.attributes['ADM0_A3'] in weights:
+
+                self.sc.axes.add_geometries(country.geometry, ccrs.PlateCarree(),
+                                facecolor=weights[country.attributes['ADM0_A3']],
+                                label=country.attributes['ADM0_A3'])
+            else:
+                self.sc.axes.add_geometries(country.geometry, ccrs.PlateCarree(),
+                                facecolor=(0, 1, 0),
+                                label=country.attributes['ADM0_A3'])
         pass
 
 class DollarForm(QMainWindow):
@@ -406,13 +444,21 @@ class DollarForm(QMainWindow):
 
 class MapWidget(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=10):
-        fig = Figure()
+        fig = Figure(figsize=(width,height), dpi=dpi)
+        ax = plt.axes(projection=ccrs.PlateCarree())
+        
         self.axes = fig.add_subplot(111, projection=ccrs.PlateCarree())
         # Add map features
+        print(type(self.axes))
         self.axes.coastlines()
         self.axes.gridlines()
+        self.axes.add_feature(cartopy.cartopy.feature.BORDERS)
+        
+        
+
         super(MapWidget, self).__init__(fig)
-    
+
+
         # ax = 
 
         # fig = plt.figure()
