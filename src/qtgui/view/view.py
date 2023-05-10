@@ -65,6 +65,7 @@ class WindowManager:
     def createDollarWidget(self, dataset):
         self.dlr = DollarForm(controller=self.controller)
         self.dlr.show()
+        self.dlr.plotVolume(dataset)
         self.dlr.plotCandles(dataset)
         pass
 
@@ -403,16 +404,16 @@ class MapForm(QMainWindow):
         print(country_power, maxi)
         weights = dict()
         for count, data in country_power.items():
-            weights[count] = (0,0, data / maxi)
+            weights[count] = (0, 1 - data / maxi, data / maxi)
         print(weights)
         for country in countries:
             if country.attributes['ADM0_A3'] in weights:
 
-                self.sc.axes.add_geometries(country.geometry, ccrs.PlateCarree(),
+                self.candles.add_geometries(country.geometry, ccrs.PlateCarree(),
                                 facecolor=weights[country.attributes['ADM0_A3']],
                                 label=country.attributes['ADM0_A3'])
             else:
-                self.sc.axes.add_geometries(country.geometry, ccrs.PlateCarree(),
+                self.candles.add_geometries(country.geometry, ccrs.PlateCarree(),
                                 facecolor=(0, 1, 0),
                                 label=country.attributes['ADM0_A3'])
         pass
@@ -424,7 +425,19 @@ class DollarForm(QMainWindow):
         # Create the maptlotlib FigureCanvas object,
         # which defines a single set of axes as self.axes.
         self.sc = PlotWidget(self, width=5, height=4, dpi=100)
-        self.sc.axes.plot([0,1,2,3,4], [10,1,20,3,40])
+        # self.sc.axis
+        self.vol = self.sc.host.twinx()
+        self.candles = self.sc.host.twinx()
+        
+        self.vol.plot([0,1,2,3,4], [1,2,2,3,40])
+        self.candles.plot([0,1,2,3,4], [10,1,20,3,40])
+        
+        offset = 60
+        new_fixed_axis = self.vol.get_grid_helper().new_fixed_axis
+        self.vol.axis["right"] = new_fixed_axis(loc="right",
+                                    axes=self.vol,
+                                    offset=(offset, 0))
+        self.vol.axis["right"].toggle(all=True)
 
         self.toolbar = NavigationToolbar(self.sc, self)
 
@@ -439,8 +452,38 @@ class DollarForm(QMainWindow):
         self.controller = controller
         self.show()
 
+    def plotVolume(self, dataset):
+        self.vol.clear()
+        for symb, data in dataset.items():
+            #define up and down prices
+            for i, _ in enumerate(data):
+                print(data["volume"][i])
+                if data["close"][i]  >= data["open"][i]:
+                    self.vol.bar(x=i , height=data["volume"][i] / 1000, width=1, bottom=0, color="green" )
+                    pass
+                else:
+                    self.vol.bar(x=i , height=data["volume"][i] / 1000 , width=1, bottom=0, color="red" )
+                    pass
+                #define colors to use
+            self.vol.plot(label=symb,zorder=1)
+            break
     def plotCandles(self, dataset):
-        pass
+        self.candles.clear()
+        for symb, data in dataset.items():
+            #define up and down prices
+            for i, _ in enumerate(data):
+                if data["close"][i]  >= data["open"][i]:
+                    print(data["high"][i] , data["low"][i] , data["close"][i], data["open"][i] )
+                    self.candles.bar(x=i , height=data["close"][i] - data["open"][i], width=.4, bottom=data["open"][i], color="black" )
+                    self.candles.bar(x=i , height=data["high"][i] - data["low"][i], width=.05, bottom=data["low"][i], color="black" )
+                    pass
+                else:
+                    self.candles.bar(x=i , height=data["open"][i] - data["close"][i], width=.4, bottom=data["close"][i], color="blue" )
+                    self.candles.bar(x=i , height=data["high"][i] - data["low"][i], width=.05, bottom=data["low"][i], color="blue" )
+                    pass
+                #define colors to use
+            self.candles.plot(label=symb,zorder=10)
+            break
 
 class MapWidget(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=10):
@@ -454,8 +497,6 @@ class MapWidget(FigureCanvasQTAgg):
         self.axes.gridlines()
         self.axes.add_feature(cartopy.cartopy.feature.BORDERS)
         
-        
-
         super(MapWidget, self).__init__(fig)
 
 
@@ -471,7 +512,20 @@ class MapWidget(FigureCanvasQTAgg):
 class PlotWidget(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=10):
         fig = Figure()
-        self.axes = fig.add_subplot(111)
+        # self.axes = fig.add_subplot(111)
+
+
+
+# Thanks to comments at my previous post noted above I managed to work out that you can use matplotlib.pyplot within PyQt4, but use the qt4 backend for display. A long winded (apologies) example is below. There is a bug with the code though both plots appear to be plotting on top of each other, not sure whats going on there:
+
+        from mpl_toolkits.axes_grid1 import host_subplot
+        import mpl_toolkits.axisartist as AA
+
+        self.host = host_subplot(111,figure=fig , axes_class=AA.Axes)
+        
+
+
+
         super(PlotWidget, self).__init__(fig)
 
 class SymbolWidget(QDialog):

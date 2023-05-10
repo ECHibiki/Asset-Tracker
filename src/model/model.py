@@ -26,10 +26,8 @@
 # T4: matplotlib $ plot interactive mode
 
 ## Thu
-# T3: Candlestick plotting
-# T4: Graph Lables
-# T4: Curve hover 
-# T4: Line
+# T4: Candlestick plotting
+# T4: Volume graph
  
 import aiohttp
 import asyncio
