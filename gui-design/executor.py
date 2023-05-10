@@ -32,8 +32,8 @@ class MainWidget(QWidget):
 #        And finally set the ticks of the axis like so:
         xax.setTicks(ticks)
 
-
-
+    def toggleInterpolation(self):
+        print(self.sender().objectName())
     def openSettingsItem(self):
         print(self.sender().objectName())
 

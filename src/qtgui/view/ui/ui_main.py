@@ -187,10 +187,29 @@ class Ui_Widget(object):
 
         self.MapButton = QPushButton(self.horizontalLayoutWidget)
         self.MapButton.setObjectName(u"MapButton")
-        icon4 = QIcon(QIcon.fromTheme(u"emblem-photos"))
+        icon4 = QIcon()
+        iconThemeName = u"emblem-photos"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon4 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon4.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+
         self.MapButton.setIcon(icon4)
 
         self.horizontalLayout.addWidget(self.MapButton)
+
+        self.DollarPlot = QPushButton(self.horizontalLayoutWidget)
+        self.DollarPlot.setObjectName(u"DollarPlot")
+        icon5 = QIcon()
+        iconThemeName = u"zoom-in"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon5 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon5.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+
+        self.DollarPlot.setIcon(icon5)
+
+        self.horizontalLayout.addWidget(self.DollarPlot)
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -212,7 +231,7 @@ class Ui_Widget(object):
         self.groupBox_3.setGeometry(QRect(373, 42, 171, 309))
         self.SimpleTable = QTableWidget(self.groupBox_3)
         self.SimpleTable.setObjectName(u"SimpleTable")
-        self.SimpleTable.setGeometry(QRect(0, 18, 172, 291))
+        self.SimpleTable.setGeometry(QRect(0, 18, 171, 291))
         self.SimpleTable.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.SimpleTable.horizontalHeader().setVisible(True)
         self.SimpleTable.horizontalHeader().setDefaultSectionSize(83)
@@ -224,17 +243,26 @@ class Ui_Widget(object):
         self.PercentPerformancePlot = PlotWidget(self.groupBox_4)
         self.PercentPerformancePlot.setObjectName(u"PercentPerformancePlot")
         self.PercentPerformancePlot.setGeometry(QRect(0, 19, 371, 291))
-        self.pushButton = QPushButton(self.groupBox_4)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(130, 3, 54, 14))
-        icon5 = QIcon(QIcon.fromTheme(u"application-x-executable"))
-        self.pushButton.setIcon(icon5)
+        self.InterpolateButton = QPushButton(self.groupBox_4)
+        self.InterpolateButton.setObjectName(u"InterpolateButton")
+        self.InterpolateButton.setGeometry(QRect(160, 0, 103, 19))
+        icon6 = QIcon()
+        iconThemeName = u"application-x-executable"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon6 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon6.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+
+        self.InterpolateButton.setIcon(icon6)
 
         self.retranslateUi(Widget)
         self.SymbolButton.clicked.connect(Widget.openSettingsItem)
         self.RequestsButton.clicked.connect(Widget.openSettingsItem)
         self.RangeButton.clicked.connect(Widget.openSettingsItem)
         self.ThreeDButton.clicked.connect(Widget.openSettingsItem)
+        self.InterpolateButton.clicked.connect(Widget.toggleInterpolation)
+        self.MapButton.clicked.connect(Widget.openSettingsItem)
+        self.DollarPlot.clicked.connect(Widget.openSettingsItem)
 
         QMetaObject.connectSlotsByName(Widget)
     # setupUi
@@ -262,9 +290,10 @@ class Ui_Widget(object):
         self.MapButton.setToolTip(QCoreApplication.translate("Widget", u"Map View", None))
 #endif // QT_CONFIG(tooltip)
         self.MapButton.setText("")
+        self.DollarPlot.setText("")
         self.groupBox_2.setTitle(QCoreApplication.translate("Widget", u"Symbol Details", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("Widget", u"Todays $ Value", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("Widget", u"Daily % Performance", None))
-        self.pushButton.setText(QCoreApplication.translate("Widget", u"Mode", None))
+        self.InterpolateButton.setText(QCoreApplication.translate("Widget", u"Interpolation", None))
     # retranslateUi
 

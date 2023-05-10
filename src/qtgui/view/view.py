@@ -5,9 +5,19 @@ import pyqtgraph.opengl as gl
 
 import numpy as np
 import random
+import scipy
 
-from PySide6.QtWidgets import QApplication, QWidget, QDialog, QMainWindow , QTableWidgetItem
-from PySide6.QtGui import QVector3D
+import matplotlib
+matplotlib.use('Qt5Agg')
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+
+
+
+from PySide6.QtWidgets import QApplication, QWidget, QDialog, QMainWindow , QTableWidgetItem, QVBoxLayout
+from PySide6.QtGui import QVector3D, QPainter
 from PySide6.QtCore import QDate, Qt
 
 # Important:
@@ -46,6 +56,15 @@ class WindowManager:
     def createAdvancedWidget(self):
         self.adv = AdvancedWidget(controller=self.controller)
         self.adv.show()
+    def createMapWidget(self, dataset):
+        self.map = MapForm(controller=self.controller)
+        self.map.show()
+        self.map.plotMap(dataset)
+    def createDollarWidget(self, dataset):
+        self.dlr = DollarForm(controller=self.controller)
+        self.dlr.show()
+        self.dlr.plotCandles(dataset)
+        pass
 
     def closeSymbolWidget(self):
         self.symbols = None
@@ -55,6 +74,10 @@ class WindowManager:
         self.q = None
     def closeAdvancedWidget(self):
         self.adv = None
+    def closeMapWidget(self):
+        pass
+    def closeDollarWidget(self):
+        pass
 
     def setAxis(self, axis):
         self.main.setAxis(axis)
@@ -101,11 +124,22 @@ class MainWidget(QWidget):
 
 
         hour = [0, 1,2,3,4,5,6,7,8,9,10]
-        temperature = [20, 30,32,34,32,33,31,29,32,35,45]
+        temperature = [0, 20,12,34,12,33,11,29,12,35,25]
         # plot data: x, y values
-        self.ui.PercentPerformancePlot.plot(hour, temperature)
+
+        scatter = pg.ScatterPlotItem(hour , temperature , symbol="t", size=15, brush='blue')
+        self.ui.PercentPerformancePlot.addItem(scatter)
+
+        ppol = scipy.interpolate.CubicSpline( hour , temperature )
+        pt = []
+        for i in range(100):
+            pt.append(i / 10)
+        self.ui.PercentPerformancePlot.plot(pt, ppol(pt) , brush="blue")
+
+        
 
         hour = [0, 1.5,2.5,3,4.5,5,6.5,7,8,9,10]
+        temperature = [40, 50,42,44,42,43,41,39,42,45,55]
         temperature.reverse()
         l =self.ui.PercentPerformancePlot.plot(hour, temperature,symbol='s', pen=pg.mkPen(width=2))
         l.setCurveClickable(True, width=10)
@@ -124,6 +158,9 @@ class MainWidget(QWidget):
         proxy = self.p1.scene().sigMouseClicked.connect(self.drawLine)
         # proxy = self.p1.scene().sigPointsHovered.connect(self.labelPoint)
         self.sp = []
+
+    def toggleInterpolation(self):
+        self.controller.setInterpolation()
 
     def labelPoint(self , pt, mclk):
         print(self, pt, mclk)
@@ -228,14 +265,21 @@ class MainWidget(QWidget):
                 vol_maxi = max(symbol_data["vol"])
            
             self.ui.PercentPerformancePlot.addLegend()
-            l = self.ui.PercentPerformancePlot.plot(x, symbol_data["close"], pen=symbol_data["style"], symbol="s" , name=symbol, hoverable=True)
-            print(l.curveClickable())
-            l.setCurveClickable(True, width=10)
-            l.sigClicked.connect(self.labelPoint)
-            # l.setZValue(10)
-            print(l.curveClickable())
-            # l.sigPointsHovered.connect(self.labelPoint)
-            
+            if symbol_data["curve"] == None:
+                l = self.ui.PercentPerformancePlot.plot(x, symbol_data["close"], pen=symbol_data["style"], symbol="s" , name=symbol, hoverable=True)
+                l.setCurveClickable(True, width=10)
+                l.sigClicked.connect(self.labelPoint)
+                # l.setZValue(10)
+                # l.sigPointsHovered.connect(self.labelPoint)
+            else:
+                scatter = pg.ScatterPlotItem(x , symbol_data["close"] , symbol="t", pen=symbol_data["style"])
+                self.ui.PercentPerformancePlot.addItem(scatter)
+                pt = []
+                for i in range(len(x) * 10):
+                    pt.append( i / 10)    
+                self.ui.PercentPerformancePlot.plot(pt, symbol_data["curve"]( pt ) , pen=symbol_data["style"] , name=symbol)
+                
+
             xo = []
             xi = []
             for pos in x:
@@ -244,7 +288,6 @@ class MainWidget(QWidget):
             count = count + 1 / len(points)
             bg = pg.BarGraphItem(x0=xo, x1=xi, height=symbol_data["vol"], pen="black", brush=symbol_data["style"].brush() )
             self.volume_plot.addItem(bg)
-
       
         self.volume_plot.setRange( yRange=(vol_mini * 2, vol_maxi * 2,))
         self.ui.PercentPerformancePlot.setRange( yRange=( mini , maxi, ) )
@@ -310,6 +353,80 @@ class MainWidget(QWidget):
             col = col + 1 
         pass
 
+
+
+class MapForm(QMainWindow):
+    def __init__(self,controller=None, *args, **kwargs):
+        super(MapForm, self).__init__(*args, **kwargs)
+
+        # Create the maptlotlib FigureCanvas object,
+        # which defines a single set of axes as self.axes.
+        sc = MapWidget(self, width=5, height=4, dpi=100)
+
+        toolbar = NavigationToolbar(sc, self)
+
+        layout = QVBoxLayout()
+        layout.addWidget(toolbar)
+        layout.addWidget(sc)
+        
+        widget = QWidget()
+        widget.setLayout(layout)
+
+        self.setCentralWidget(widget)
+        self.controller = controller
+        self.show()
+
+    def plotMap(self, dataset):
+        pass
+
+class DollarForm(QMainWindow):
+    def __init__(self,controller=None, *args, **kwargs):
+        super(DollarForm, self).__init__(*args, **kwargs)
+
+        # Create the maptlotlib FigureCanvas object,
+        # which defines a single set of axes as self.axes.
+        self.sc = PlotWidget(self, width=5, height=4, dpi=100)
+        self.sc.axes.plot([0,1,2,3,4], [10,1,20,3,40])
+
+        self.toolbar = NavigationToolbar(self.sc, self)
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.toolbar)
+        self.layout.addWidget(self.sc)
+        
+        self.widget = QWidget()
+        self.widget.setLayout(self.layout)
+
+        self.setCentralWidget(self.widget)
+        self.controller = controller
+        self.show()
+
+    def plotCandles(self, dataset):
+        pass
+
+class MapWidget(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=10):
+        fig = Figure()
+        self.axes = fig.add_subplot(111, projection=ccrs.PlateCarree())
+        # Add map features
+        self.axes.coastlines()
+        self.axes.gridlines()
+        super(MapWidget, self).__init__(fig)
+    
+        # ax = 
+
+        # fig = plt.figure()
+        # ax.coastlines()
+        # ax.figure.canvas.draw()
+        # renderer = fig.canvas.renderer
+        # painter = QPainter(self)
+        # painter.drawPixmap(0, 0, renderer.toPixmap())
+
+class PlotWidget(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=10):
+        fig = Figure()
+        self.axes = fig.add_subplot(111)
+        super(PlotWidget, self).__init__(fig)
 
 class SymbolWidget(QDialog):
     def __init__(self, parent=None, controller=None):

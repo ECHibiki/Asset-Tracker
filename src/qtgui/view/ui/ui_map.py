@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'advanced.ui'
+## Form generated from reading UI file 'map.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.5.0
 ##
@@ -17,23 +17,21 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QSizePolicy, QWidget)
 
-from pyqtgraph.opengl import GLViewWidget
+class Ui_Form(object):
+    def setupUi(self, Form):
+        if not Form.objectName():
+            Form.setObjectName(u"Form")
+        Form.resize(470, 447)
+        self.MapItem = QWidget(Form)
+        self.MapItem.setObjectName(u"MapItem")
+        self.MapItem.setGeometry(QRect(-1, 0, 471, 441))
 
-class Ui_Advanced(object):
-    def setupUi(self, Advanced):
-        if not Advanced.objectName():
-            Advanced.setObjectName(u"Advanced")
-        Advanced.resize(460, 374)
-        self.graphicsView = GLViewWidget(Advanced)
-        self.graphicsView.setObjectName(u"graphicsView")
-        self.graphicsView.setGeometry(QRect(0, 0, 461, 371))
+        self.retranslateUi(Form)
 
-        self.retranslateUi(Advanced)
-
-        QMetaObject.connectSlotsByName(Advanced)
+        QMetaObject.connectSlotsByName(Form)
     # setupUi
 
-    def retranslateUi(self, Advanced):
-        Advanced.setWindowTitle(QCoreApplication.translate("Advanced", u"PyQtGraph Demo", None))
+    def retranslateUi(self, Form):
+        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
     # retranslateUi
 

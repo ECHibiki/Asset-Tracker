@@ -27,6 +27,10 @@ class Controller:
             self.model.openQuery()
         elif obj_name == "ThreeDButton":
             self.model.openAdvanced()
+        elif obj_name == "MapButton":
+            self.model.openMap()
+        elif obj_name == "DollarPlot":
+            self.model.openDollar()
         else:
             print("undefined" , obj_name)
     
@@ -55,11 +59,14 @@ class Controller:
     def makeRequest(self, url):
         asyncio.run(self.model.sendRequest(url))
 
+    def setInterpolation(self):
+        self.model.toggleInterpolation()
+
     """
     ------- M -> C -> V -------  
     """
 
-    def openViewItem(self, obj_name):
+    def openViewItem(self, obj_name, data=[]):
         if obj_name == "SymbolButton":
             self.view.createSymbolWidget()
         elif obj_name == "RangeButton":
@@ -68,6 +75,10 @@ class Controller:
             self.view.createQueryWidget()
         elif obj_name == "ThreeDButton":
             self.view.createAdvancedWidget()
+        elif obj_name == "MapButton":
+            self.view.createMapWidget(data)
+        elif obj_name == "DollarPlot":
+            self.view.createDollarWidget(data)
         else:
             print("undefined" , obj_name)
     
@@ -80,6 +91,10 @@ class Controller:
             self.view.closeQueryWidget()
         elif obj_name == "ThreeDButton":
             self.view.closeAdvancedWidget()
+        elif obj_name == "MapButton":
+            self.view.closeMapWidget()
+        elif obj_name == "DollarPlot":
+            self.view.closeDollarWidget()
         else:
             print("undefined" , obj_name)
 

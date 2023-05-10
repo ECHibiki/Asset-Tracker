@@ -569,17 +569,19 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset theme="emblem-photos"/>
+        <iconset theme="emblem-photos">
+         <normaloff>.</normaloff>.</iconset>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="DolarPlot">
+      <widget class="QPushButton" name="DollarPlot">
        <property name="text">
         <string/>
        </property>
        <property name="icon">
-        <iconset theme="zoom-in"/>
+        <iconset theme="zoom-in">
+         <normaloff>.</normaloff>.</iconset>
        </property>
       </widget>
      </item>
@@ -691,20 +693,21 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="InterpolateButton">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>2</y>
-      <width>54</width>
-      <height>14</height>
+      <x>160</x>
+      <y>0</y>
+      <width>103</width>
+      <height>19</height>
      </rect>
     </property>
     <property name="text">
-     <string>Mode</string>
+     <string>Interpolation</string>
     </property>
     <property name="icon">
-     <iconset theme="application-x-executable"/>
+     <iconset theme="application-x-executable">
+      <normaloff>.</normaloff>.</iconset>
     </property>
    </widget>
   </widget>
@@ -741,8 +744,8 @@
    <slot>openSettingsItem()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>35</y>
+     <x>96</x>
+     <y>29</y>
     </hint>
     <hint type="destinationlabel">
      <x>365</x>
@@ -758,7 +761,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>62</x>
-     <y>32</y>
+     <y>29</y>
     </hint>
     <hint type="destinationlabel">
      <x>364</x>
@@ -773,8 +776,8 @@
    <slot>openSettingsItem()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>112</x>
-     <y>32</y>
+     <x>130</x>
+     <y>29</y>
     </hint>
     <hint type="destinationlabel">
      <x>365</x>
@@ -782,8 +785,57 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>InterpolateButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Widget</receiver>
+   <slot>toggleInterpolation()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>52</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>352</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MapButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Widget</receiver>
+   <slot>openSettingsItem()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>147</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>117</x>
+     <y>354</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DollarPlot</sender>
+   <signal>clicked()</signal>
+   <receiver>Widget</receiver>
+   <slot>openSettingsItem()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>188</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>230</x>
+     <y>353</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openSettingsItem()</slot>
+  <slot>toggleInterpolation()</slot>
  </slots>
 </ui>

@@ -1,5 +1,6 @@
 # matplotlib == easy and flexible, lots of docs
 # pyqtgraph == performant and animations, lots of flexibility
+# Interpolation not provided by libraries. Differing engines to provide visualization of data
 
 ## Mon
 # T1: Acquire the data from sources
@@ -20,12 +21,12 @@
     # PlotCurveItem
 
 ## Wed
-# T3: Bezier spline or linear interpolation toggle
-# T3: Candlestick mode
+# T3: Bezier spline or linear interpolation toggle ( curve on high and low from close to close)
 # T3: matplotlib-basemap HQ map window with price as positions
+# T4: matplotlib $ plot interactive mode
 
 ## Thu
-# T4: matplotlib $ plot interactive mode
+# T3: Candlestick plotting
 # T4: Graph Lables
 # T4: Curve hover 
 # T4: Line
@@ -39,6 +40,7 @@ import random
 import numpy as np
 import yfinance as yf
 import pyqtgraph as pg
+import scipy
 
 from PySide6.QtCore import QDate
 
@@ -49,6 +51,7 @@ class Model:
         self.end_date = self.createWorkDay( self.datetimeTuple( datetime.date.today() ) )
         self.start_date = self.createWorkDay( self.datetimeTuple( datetime.date.today() + datetime.timedelta(days= -7 )  ) )
         self.first_day_unset = True
+        self.interpolation = "linear"
 
     def link(self, controller):
         self.controller = controller
@@ -104,6 +107,10 @@ class Model:
         self.controller.openViewItem("RequestsButton")
     def openAdvanced(self):
         self.controller.openViewItem("ThreeDButton")
+    def openMap(self):
+        self.controller.openViewItem("MapButton", self.data_list)
+    def openDollar(self):
+        self.controller.openViewItem("DollarPlot" , self.data_list)
 
     def clearSymbolVars(self):
         pass
@@ -180,6 +187,12 @@ class Model:
     def dateToAxisString(self, date):
         return str(date.month) + "/" + str(date.day)
 
+    def toggleInterpolation(self):
+        if self.interpolation == "linear":
+            self.interpolation = "cubic"
+        else:
+            self.interpolation = "linear"
+        self.setMainData()
 
 # TIME INTERVAL NOT SET
 
@@ -188,7 +201,7 @@ class Model:
         plot_data = dict()
         yesterday = dict()
         for symbol, data in self.data_list.items( ):
-            plot_data[symbol] =  {"close": [] , "open": [] , "high": [] , "low": [] , "vol": [], "style": data["color"] }
+            plot_data[symbol] =  {"curve": [] ,"close": [] , "open": [] , "high": [] , "low": [] , "vol": [], "style": data["color"] }
             c = 0
             for i , close in enumerate(data["close"]):
                 if len(yesterday) == 0:
@@ -216,6 +229,10 @@ class Model:
                     yesterday["low"] =  data["low"][i] 
                     yesterday["volume"] =  data["volume"][i] 
                     c  = c  + 1
+            if self.interpolation == "cubic":
+                plot_data[symbol]["curve"] = scipy.interpolate.CubicSpline( range(len(plot_data[symbol]["close"])) , plot_data[symbol]["close"] )
+            else:
+                plot_data[symbol]["curve"] = None
         return plot_data
     def buildDollarData(self):
         percent_list = dict()
