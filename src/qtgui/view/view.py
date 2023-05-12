@@ -65,6 +65,7 @@ class WindowManager:
     def createDollarWidget(self, dataset):
         self.dlr = DollarForm(controller=self.controller)
         self.dlr.show()
+        self.dlr.clear()
         self.dlr.plotVolume(dataset)
         self.dlr.plotCandles(dataset)
         pass
@@ -97,7 +98,7 @@ class MainWidget(QWidget):
         self.ui = Ui_Widget()
         self.ui.setupUi(self)
         self.controller = controller
-        self.setFixedSize(self.size())
+        # self.setFixedSize(self.size())
 
         self.ui.PercentPerformancePlot.setLimits(xMin=0, xMax=8, minXRange=1, yMin=-100, yMax=100)
         self.ui.PercentPerformancePlot.setRange(xRange=(0,5,) , yRange=(0,100,))
@@ -409,81 +410,15 @@ class MapForm(QMainWindow):
         for country in countries:
             if country.attributes['ADM0_A3'] in weights:
 
-                self.candles.add_geometries(country.geometry, ccrs.PlateCarree(),
+                self.sc.axes.add_geometries(country.geometry, ccrs.PlateCarree(),
                                 facecolor=weights[country.attributes['ADM0_A3']],
                                 label=country.attributes['ADM0_A3'])
             else:
-                self.candles.add_geometries(country.geometry, ccrs.PlateCarree(),
+                self.sc.axes.add_geometries(country.geometry, ccrs.PlateCarree(),
                                 facecolor=(0, 1, 0),
                                 label=country.attributes['ADM0_A3'])
         pass
 
-class DollarForm(QMainWindow):
-    def __init__(self,controller=None, *args, **kwargs):
-        super(DollarForm, self).__init__(*args, **kwargs)
-
-        # Create the maptlotlib FigureCanvas object,
-        # which defines a single set of axes as self.axes.
-        self.sc = PlotWidget(self, width=5, height=4, dpi=100)
-        # self.sc.axis
-        self.vol = self.sc.host.twinx()
-        self.candles = self.sc.host.twinx()
-        
-        self.vol.plot([0,1,2,3,4], [1,2,2,3,40])
-        self.candles.plot([0,1,2,3,4], [10,1,20,3,40])
-        
-        offset = 60
-        new_fixed_axis = self.vol.get_grid_helper().new_fixed_axis
-        self.vol.axis["right"] = new_fixed_axis(loc="right",
-                                    axes=self.vol,
-                                    offset=(offset, 0))
-        self.vol.axis["right"].toggle(all=True)
-
-        self.toolbar = NavigationToolbar(self.sc, self)
-
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.toolbar)
-        self.layout.addWidget(self.sc)
-        
-        self.widget = QWidget()
-        self.widget.setLayout(self.layout)
-
-        self.setCentralWidget(self.widget)
-        self.controller = controller
-        self.show()
-
-    def plotVolume(self, dataset):
-        self.vol.clear()
-        for symb, data in dataset.items():
-            #define up and down prices
-            for i, _ in enumerate(data):
-                print(data["volume"][i])
-                if data["close"][i]  >= data["open"][i]:
-                    self.vol.bar(x=i , height=data["volume"][i] / 1000, width=1, bottom=0, color="green" )
-                    pass
-                else:
-                    self.vol.bar(x=i , height=data["volume"][i] / 1000 , width=1, bottom=0, color="red" )
-                    pass
-                #define colors to use
-            self.vol.plot(label=symb,zorder=1)
-            break
-    def plotCandles(self, dataset):
-        self.candles.clear()
-        for symb, data in dataset.items():
-            #define up and down prices
-            for i, _ in enumerate(data):
-                if data["close"][i]  >= data["open"][i]:
-                    print(data["high"][i] , data["low"][i] , data["close"][i], data["open"][i] )
-                    self.candles.bar(x=i , height=data["close"][i] - data["open"][i], width=.4, bottom=data["open"][i], color="black" )
-                    self.candles.bar(x=i , height=data["high"][i] - data["low"][i], width=.05, bottom=data["low"][i], color="black" )
-                    pass
-                else:
-                    self.candles.bar(x=i , height=data["open"][i] - data["close"][i], width=.4, bottom=data["close"][i], color="blue" )
-                    self.candles.bar(x=i , height=data["high"][i] - data["low"][i], width=.05, bottom=data["low"][i], color="blue" )
-                    pass
-                #define colors to use
-            self.candles.plot(label=symb,zorder=10)
-            break
 
 class MapWidget(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=10):
@@ -509,12 +444,102 @@ class MapWidget(FigureCanvasQTAgg):
         # painter = QPainter(self)
         # painter.drawPixmap(0, 0, renderer.toPixmap())
 
+class DollarForm(QMainWindow):
+    def __init__(self,controller=None, *args, **kwargs):
+        super(DollarForm, self).__init__(*args, **kwargs)
+
+        # Create the maptlotlib FigureCanvas object,
+        # which defines a single set of axes as self.axes.
+        self.sc = PlotWidget(self, width=5, height=4, dpi=100)
+        self.vol = self.sc.host.twinx()
+
+        self.vol.set_zorder(-1)
+        print( self.sc.host.get_zorder() )
+        print( self.vol.get_zorder() )
+        # self.sc.axis
+        # self.candles = self.sc.host.twinx()
+        
+        self.vpl = self.vol.plot([0,1,2,3,4], [1,2,2,3,40])
+        self.cndl = self.sc.host.plot([0,1,2,3,4], [10,1,20,3,40])
+
+        # offset = 60
+        self.vol.axis["left"].set_visible(True)
+        new_fixed_axis = self.vol.get_grid_helper().new_fixed_axis
+        self.vol.axis["left"] = new_fixed_axis(loc="right",
+                                    axes=self.vol,)
+        self.vol.axis["left"].major_ticklabels.set_visible(True)
+        self.vol.axis["left"].toggle(all=True)
+
+        # self.vol.axis["left"].set_visible(True)
+        # self.vol.axis["right"].major_ticklabels.set_visible(True)
+        # # self.vol.axis["right"].major_ticks.set_ticklabels([])
+        # self.vol.axis["right"].label.set_visible(True)
+        # self.vol.set( ylabel="Vol")
+
+        self.toolbar = NavigationToolbar(self.sc, self)
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.toolbar)
+        self.layout.addWidget(self.sc)
+        
+        self.widget = QWidget()
+        self.widget.setLayout(self.layout)
+
+        self.setCentralWidget(self.widget)
+        self.controller = controller
+        self.show()
+
+    def clear(self):
+        for c in self.cndl:
+            print(c , type(c))
+            c.remove()
+        for c in self.vpl:
+            print(c , type(c))
+            c.remove()
+        # self.cndl.clear()
+        # self.vpl.clear()
+
+    def plotVolume(self, dataset):
+        for symb, data in dataset.items():
+            #define up and down prices
+            maxi = (max(data["volume"]) / 1000) * 10
+            for i, _ in enumerate(data["volume"]):
+                if data["close"][i]  >= data["open"][i]:
+                    self.vol.bar(x=i , height=data["volume"][i] / 1000, width=0.8, bottom=0, color="green" )
+                    pass
+                else:
+                    self.vol.bar(x=i , height=data["volume"][i] / 1000 , width=0.8, bottom=0, color="red" )
+                    pass
+                #define colors to use
+            self.vol.set_yticks([0, maxi / 10])
+            self.vol.set_ylim(0, maxi)
+            # self.vpl = self.vol.plot()
+            break
+    def plotCandles(self, dataset):
+        for symb, data in dataset.items():
+            #define up and down prices
+            maxi = max(data["high"])
+            mini = min(data["low"]) 
+            mini = mini if mini >= 0 else 0
+            for i, _ in enumerate(data["high"]):
+                print(i ,data["high"][i] , data["low"][i] , data["close"][i], data["open"][i] )
+                if data["close"][i]  >= data["open"][i]:
+                    self.sc.host.bar(x=i , height=data["close"][i] - data["open"][i], width=.4, bottom=data["open"][i], color="black", zorder=10 )
+                    self.sc.host.bar(x=i , height=data["high"][i] - data["low"][i], width=.05, bottom=data["low"][i], color="black", zorder=10 )
+                else:
+                    self.sc.host.bar(x=i , height=data["open"][i] - data["close"][i], width=.4, bottom=data["close"][i], color="blue" , zorder=10)
+                    self.sc.host.bar(x=i , height=data["high"][i] - data["low"][i], width=.05, bottom=data["low"][i], color="blue", zorder=10 )
+                #define colors to use
+            self.sc.host.set_ylim(mini, maxi)
+            print(mini, maxi)
+            # self.cndl = self.sc.host.plot()
+            break
+
+
 class PlotWidget(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=10):
         fig = Figure()
         # self.axes = fig.add_subplot(111)
-
-
 
 # Thanks to comments at my previous post noted above I managed to work out that you can use matplotlib.pyplot within PyQt4, but use the qt4 backend for display. A long winded (apologies) example is below. There is a bug with the code though both plots appear to be plotting on top of each other, not sure whats going on there:
 
@@ -523,8 +548,6 @@ class PlotWidget(FigureCanvasQTAgg):
 
         self.host = host_subplot(111,figure=fig , axes_class=AA.Axes)
         
-
-
 
         super(PlotWidget, self).__init__(fig)
 

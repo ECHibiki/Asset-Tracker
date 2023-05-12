@@ -17,21 +17,21 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QSizePolicy, QWidget)
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        if not Form.objectName():
-            Form.setObjectName(u"Form")
-        Form.resize(470, 447)
-        self.MapItem = QWidget(Form)
+class Ui_MapForm(object):
+    def setupUi(self, MapForm):
+        if not MapForm.objectName():
+            MapForm.setObjectName(u"MapForm")
+        MapForm.resize(470, 447)
+        self.MapItem = QWidget(MapForm)
         self.MapItem.setObjectName(u"MapItem")
         self.MapItem.setGeometry(QRect(-1, 0, 471, 441))
 
-        self.retranslateUi(Form)
+        self.retranslateUi(MapForm)
 
-        QMetaObject.connectSlotsByName(Form)
+        QMetaObject.connectSlotsByName(MapForm)
     # setupUi
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+    def retranslateUi(self, MapForm):
+        MapForm.setWindowTitle(QCoreApplication.translate("MapForm", u"Form", None))
     # retranslateUi
 

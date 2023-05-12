@@ -24,10 +24,12 @@
 # T3: Bezier spline or linear interpolation toggle ( curve on high and low from close to close)
 # T3: matplotlib-basemap HQ map window with price as positions
 # T4: matplotlib $ plot interactive mode
-
-## Thu
 # T4: Candlestick plotting
 # T4: Volume graph
+
+## Thu
+ # Cleanup
+ # Other tasks
  
 import aiohttp
 import asyncio

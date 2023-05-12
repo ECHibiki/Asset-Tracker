@@ -95,9 +95,9 @@ if __name__ == "__main__":
     adv = AdvancedWidget()
 
     widget.show()
-    symbols.show()
-    dates.show()
-    q.show()
-    adv.show()
+#    symbols.show()
+#    dates.show()
+#    q.show()
+#    adv.show()
 
     sys.exit(app.exec())
